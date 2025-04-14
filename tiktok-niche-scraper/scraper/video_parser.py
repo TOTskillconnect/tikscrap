@@ -218,6 +218,11 @@ def parse_video_data(raw_video):
         "statistics": {}
     }
     
+    # Check if raw_video is a dictionary, otherwise return default values
+    if not isinstance(raw_video, dict):
+        logger.error(f"Error parsing video data: expected dict, got {type(raw_video).__name__}")
+        return video_data
+    
     # Extract basic video information
     try:
         # Video ID
@@ -226,8 +231,13 @@ def parse_video_data(raw_video):
         # Video URL
         if "id" in raw_video:
             video_id = raw_video["id"]
-            author = raw_video.get("author", {}).get("uniqueId", "")
-            video_data["url"] = f"https://www.tiktok.com/@{author}/video/{video_id}"
+            author = raw_video.get("author", {})
+            if isinstance(author, dict):
+                author_id = author.get("uniqueId", "")
+                video_data["url"] = f"https://www.tiktok.com/@{author_id}/video/{video_id}"
+            else:
+                # Handle the case when author is a string or other non-dict type
+                video_data["url"] = f"https://www.tiktok.com/video/{video_id}"
         
         # Video description
         video_data["description"] = raw_video.get("desc", "")
@@ -236,7 +246,7 @@ def parse_video_data(raw_video):
         video_data["hashtags"] = extract_hashtags(video_data["description"])
         
         # Author information
-        if "author" in raw_video:
+        if "author" in raw_video and isinstance(raw_video["author"], dict):
             author_data = raw_video["author"]
             video_data["author"] = author_data.get("uniqueId", "")
             video_data["author_id"] = author_data.get("id", "")
@@ -249,13 +259,13 @@ def parse_video_data(raw_video):
             video_data["timestamp"] = parse_timestamp(raw_video["createTime"])
         
         # Music information
-        if "music" in raw_video:
+        if "music" in raw_video and isinstance(raw_video["music"], dict):
             music_data = raw_video["music"]
             video_data["music"] = music_data.get("title", "")
             video_data["music_author"] = music_data.get("authorName", "")
         
         # Video duration
-        if "video" in raw_video and "duration" in raw_video["video"]:
+        if "video" in raw_video and isinstance(raw_video["video"], dict) and "duration" in raw_video["video"]:
             video_data["duration"] = int(raw_video["video"]["duration"])
         
         # Statistics (likes, comments, shares, views)

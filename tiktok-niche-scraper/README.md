@@ -197,3 +197,88 @@ This scraper is for educational purposes only. Please be aware that:
 ## License
 
 MIT 
+
+## Troubleshooting Common Issues
+
+### Error: 'str' object has no attribute 'get'
+This error occurs when the scraper attempts to process raw video data that is in string format instead of a dictionary. This has been fixed in the latest version. If you encounter this:
+1. Make sure you're using the latest version of the scraper
+2. Check that the `video_parser.py` file contains proper type checking
+3. Restart the scraper
+
+### Error: "The token '&&' is not a valid statement separator"
+In Windows PowerShell, use semicolons (`;`) instead of double ampersands (`&&`) to separate commands:
+```powershell
+cd tiktok-niche-scraper; python main.py
+```
+
+### Browser Not Starting
+If the browser fails to start:
+1. Make sure you've installed the Playwright browsers: `playwright install`
+2. Check your internet connection
+3. Increase timeouts in the `stealth_browser.py` file
+
+### No Videos Found
+If the scraper isn't finding videos:
+1. Check your keywords in `config.py` - make sure they're trending topics
+2. Try different discovery methods by changing `PREFERRED_DISCOVERY_METHODS` in config
+3. Check TikTok website directly to ensure the content exists
+4. Consider reducing `STEALTH_LEVEL` temporarily for testing
+
+### Google Sheets Integration Issues
+If Google Sheets integration isn't working:
+1. Ensure `client_secret.json` is properly set up and located in the root directory
+2. Check that your Google Cloud project has the Google Sheets API enabled
+3. Verify your `GOOGLE_SHEETS_ID` in config.py is correct
+4. Delete `token.pickle` file and re-authenticate
+
+## Deployment Options
+
+### GitHub Actions (Easy Automated Deployment)
+The scraper includes GitHub Actions workflows that can automatically run on a schedule:
+
+1. Push your code to GitHub
+2. Store your Google credentials as a repository secret named `GOOGLE_CREDENTIALS_JSON`
+3. The scraper will run automatically according to the schedule in `.github/workflows/schedule_scraper.yml`
+4. Scraped data will be committed back to your repository
+
+### VPS/Cloud Server (Production Deployment)
+For more reliable production use:
+
+1. Set up a small VPS (DigitalOcean, AWS, etc.)
+2. Clone the repository
+3. Install dependencies
+4. Use the built-in scheduler with daemon mode: `python run_scheduler.py --daemon`
+5. Consider setting up a service for automatic startup:
+
+```ini
+[Unit]
+Description=TikTok Niche Scraper Service
+After=network.target
+
+[Service]
+User=yourusername
+WorkingDirectory=/path/to/tiktok-niche-scraper
+ExecStart=/usr/bin/python3 run_scheduler.py --daemon
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+```
+
+## Extending the Scraper
+
+### Adding New Content Discovery Methods
+To add a new discovery method:
+1. Edit `scraper/content_discovery.py`
+2. Add your method following the pattern of existing methods
+3. Update the `execute_best_approach` function to include your method
+
+### Custom Performance Metrics
+Modify `scraper/video_parser.py` to calculate additional performance metrics:
+```python
+def calculate_performance_score(video_data):
+    # Your custom algorithm here
+    return score
+``` 

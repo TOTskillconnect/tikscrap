@@ -135,13 +135,40 @@ async def parse_video_data(page, video_elements, content, keyword):
     try:
         for i, element in enumerate(video_elements):
             try:
+                # Skip if element is None or invalid
+                if element is None:
+                    continue
+                    
                 # For Playwright elements, extract attributes
                 if hasattr(element, 'get_attribute'):
                     # This is a Playwright element
                     video_data = await extract_video_from_playwright_element(page, element, keyword)
                 else:
-                    # This is a BeautifulSoup element
-                    video_data = extract_video_from_bs_element(element, soup, keyword)
+                    # Check if element is a string (raw data already)
+                    if isinstance(element, str):
+                        # Try to parse as JSON first
+                        try:
+                            parsed_data = json.loads(element)
+                            # Create a minimal video data structure
+                            video_data = {
+                                "url": "",
+                                "description": "",
+                                "author": "",
+                                "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                                "hashtags": [],
+                                "keyword": keyword,
+                                "statistics": {}
+                            }
+                        except Exception:
+                            # If not valid JSON, skip this element
+                            logger.warning(f"Skipping string element that is not valid JSON: {element[:50]}...")
+                            continue
+                    elif isinstance(element, dict):
+                        # It's already a dictionary, use it directly
+                        video_data = element
+                    else:
+                        # This is a BeautifulSoup element
+                        video_data = extract_video_from_bs_element(element, soup, keyword)
                 
                 if video_data and "url" in video_data and video_data["url"]:
                     videos.append(video_data)
