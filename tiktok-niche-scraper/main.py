@@ -1,280 +1,198 @@
 """
-Main script for the TikTok Niche Scraper.
-Uses enhanced stealth techniques and multiple content discovery approaches to find trending videos.
+TikTok Niche Scraper - Main Script
+Enhanced version with advanced stealth techniques, trending video detection,
+and multiple content discovery approaches.
 """
 
-import asyncio
+import os
+import sys
 import json
 import csv
-import os
-from pathlib import Path
-import sys
-from datetime import datetime
+import logging
 import random
 import time
-import operator
+from datetime import datetime
+from pathlib import Path
+from typing import List, Dict, Any, Optional, Tuple
 
-from utils.logger import get_logger, configure_logging
-from config import (
-    KEYWORDS, 
-    MAX_VIDEOS_PER_KEYWORD, 
-    OUTPUT_FORMATS, 
-    OUTPUT_DIRECTORY,
-    GOOGLE_SHEETS_ENABLED,
-    CONCURRENT_KEYWORDS,
-    MIN_VIDEOS_REQUIRED,
-    BROWSER_VISIBILITY,
-    TRENDING_ONLY,
-    MIN_VIEWS,
-    MIN_ENGAGEMENT_RATE,
-    SORT_BY_PERFORMANCE,
-    MAX_TOTAL_VIDEOS,
-    LOG_LEVEL,
-    LOG_FILE,
-    MAX_VIDEO_AGE_DAYS
-)
-from scraper.tiktok_api import get_videos_for_tag
-from scraper.video_parser import parse_video_data, is_trending, is_recent_video, calculate_performance_score
-
-# Conditionally import Google Sheets module only if enabled
-if 'google_sheets' in OUTPUT_FORMATS and GOOGLE_SHEETS_ENABLED:
-    from utils.sheets_helper import update_google_sheet
-
-# Configure logging
-configure_logging(LOG_LEVEL, LOG_FILE)
+# Setup logging
+from utils.logger import get_logger
 logger = get_logger()
 
-def save_to_json(videos, output_file):
-    """Save videos to JSON file."""
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(videos, f, indent=4, ensure_ascii=False)
-    logger.info(f"Saved {len(videos)} videos to {output_file}")
+# Import configuration
+try:
+    from config import (
+        KEYWORDS, MAX_VIDEOS_PER_KEYWORD, BROWSER_VISIBLE, STEALTH_LEVEL,
+        OUTPUT_DIR, SAVE_JSON, SAVE_CSV, UPDATE_GOOGLE_SHEETS,
+        TRENDING_ONLY, MIN_VIEWS, MIN_ENGAGEMENT_RATE, 
+        SORT_BY_PERFORMANCE, MAX_TOTAL_VIDEOS
+    )
+except ImportError as e:
+    logger.error(f"Failed to import configuration: {e}")
+    sys.exit(1)
 
-def save_to_csv(videos, output_file):
-    """Save videos to CSV file."""
-    if not videos:
-        logger.warning("No videos to save to CSV")
-        return
-        
-    # Get all possible fields from the videos
-    fieldnames = set()
-    for video in videos:
-        fieldnames.update(video.keys())
-        fieldnames.update([f"statistics_{key}" for key in video.get('statistics', {})])
-        
-    fieldnames = sorted(list(fieldnames))
-    
-    # Remove the statistics dictionary from fieldnames since we'll expand it
-    if 'statistics' in fieldnames:
-        fieldnames.remove('statistics')
-        
-    with open(output_file, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        
-        for video in videos:
-            # Create a flat dictionary for CSV
-            row = video.copy()
-            
-            # Expand statistics into separate columns
-            if 'statistics' in row:
-                for key, value in row['statistics'].items():
-                    row[f'statistics_{key}'] = value
-                del row['statistics']
-                
-            # Handle lists by converting them to strings
-            for key, value in row.items():
-                if isinstance(value, list):
-                    row[key] = ', '.join(map(str, value))
-                    
-            writer.writerow(row)
-            
-    logger.info(f"Saved {len(videos)} videos to {output_file}")
+# Import scraper modules
+from scraper.stealth_browser import StealthBrowser
+from scraper.content_discovery import discover_videos
+from scraper.video_parser import extract_video_data, extract_statistics, calculate_performance_score, is_trending
+from utils.data_saver import save_to_json, save_to_csv, update_google_sheet, export_trending_report
 
-async def scrape_keyword(keyword, min_views=1000, min_engagement_rate=0.01, max_videos=100, max_age_days=14):
-    """
-    Scrape videos for a specific keyword.
+def main():
+    """Main function to run the TikTok Niche Scraper"""
     
-    Args:
-        keyword (str): Keyword to scrape videos for
-        min_views (int): Minimum views for trending videos
-        min_engagement_rate (float): Minimum engagement rate for trending videos
-        max_videos (int): Maximum number of videos to return
-        max_age_days (int): Maximum age of videos in days
-        
-    Returns:
-        list: Trending videos for the keyword
-    """
-    logger.info(f"Starting scrape for keyword: {keyword}")
-    
-    # Add a random delay between keywords to appear more natural
-    delay = round(random.uniform(1, 5), 2)
-    logger.info(f"Adding random delay of {delay}s before processing '{keyword}'")
-    await asyncio.sleep(delay)
-    
-    # Get videos for the keyword
-    videos = await get_videos_for_tag(keyword, max_videos=max_videos)
-    
-    if not videos:
-        logger.warning(f"No videos found for keyword: {keyword}")
-        return []
-        
-    logger.info(f"Found {len(videos)} videos for keyword: {keyword}")
-    
-    # Filter for trending videos within the past two weeks
-    trending_videos = []
-    for video in videos:
-        # Check if video is recent
-        if not is_recent_video(video["timestamp"], max_age_days=max_age_days):
-            continue
-            
-        # Check if video is trending
-        if TRENDING_ONLY and not is_trending(video, min_views=min_views, min_engagement_rate=min_engagement_rate):
-            continue
-            
-        # Add keyword to the video data
-        video["keyword"] = keyword
-        trending_videos.append(video)
-    
-    logger.info(f"Processed {len(trending_videos)} trending videos for keyword: {keyword}")
-    return trending_videos
-
-async def process_keywords_batch(keywords_batch):
-    """
-    Process a batch of keywords concurrently.
-    
-    Args:
-        keywords_batch (list): Batch of keywords to process
-        
-    Returns:
-        list: Combined list of videos from all keywords in batch
-    """
-    # Process keywords concurrently
-    tasks = [scrape_keyword(keyword) for keyword in keywords_batch]
-    results = await asyncio.gather(*tasks)
-    
-    # Flatten the results
-    all_videos = []
-    for videos in results:
-        all_videos.extend(videos)
-        
-    return all_videos
-
-async def main():
-    """Main function to run the scraper."""
     logger.info("Starting TikTok Niche Scraper with enhanced stealth techniques")
-    logger.info(f"Browser visibility: {'Visible' if BROWSER_VISIBILITY else 'Headless'}")
-    logger.info(f"Trending filter enabled: {TRENDING_ONLY}, Min views: {MIN_VIEWS}")
+    logger.info(f"Browser visibility: {'Visible' if BROWSER_VISIBLE else 'Headless'}")
     
-    # Create output directory if it doesn't exist
-    output_dir = Path(__file__).parent / OUTPUT_DIRECTORY
-    os.makedirs(output_dir, exist_ok=True)
+    # Process keywords in batches to avoid overwhelming the browser
+    batch_size = 2
+    keyword_batches = [KEYWORDS[i:i+batch_size] for i in range(0, len(KEYWORDS), batch_size)]
     
+    # Initialize results storage
     all_videos = []
     successful_keywords = []
     failed_keywords = []
     
-    # Process keywords in batches for controlled concurrency
-    if CONCURRENT_KEYWORDS and CONCURRENT_KEYWORDS > 1:
-        logger.info(f"Processing keywords in batches of {CONCURRENT_KEYWORDS}")
-        
-        # Split keywords into batches
-        keyword_batches = [KEYWORDS[i:i+CONCURRENT_KEYWORDS] for i in range(0, len(KEYWORDS), CONCURRENT_KEYWORDS)]
-        
-        # Process each batch
-        for batch_idx, batch in enumerate(keyword_batches):
-            logger.info(f"Processing batch {batch_idx+1}/{len(keyword_batches)}: {', '.join(batch)}")
-            batch_videos = await process_keywords_batch(batch)
+    # Track start time
+    start_time = datetime.now()
+    timestamp = start_time.strftime("%Y%m%d_%H%M%S")
+    
+    try:
+        # Process each batch of keywords
+        for batch_idx, keyword_batch in enumerate(keyword_batches):
+            logger.info(f"Processing keyword batch {batch_idx+1}/{len(keyword_batches)}: {keyword_batch}")
             
-            # Add to the main list
-            all_videos.extend(batch_videos)
+            # Initialize browser for this batch
+            browser = StealthBrowser(visible=BROWSER_VISIBLE, stealth_level=STEALTH_LEVEL)
             
-            # Update successful/failed keywords
-            for keyword in batch:
-                keyword_videos = [v for v in batch_videos if v.get('keyword') == keyword]
-                if len(keyword_videos) >= MIN_VIDEOS_REQUIRED:
-                    successful_keywords.append(keyword)
-                else:
-                    failed_keywords.append(keyword)
-            
-            # Add a delay between batches to avoid detection
+            try:
+                for keyword in keyword_batch:
+                    # Add random delay before processing each keyword
+                    delay = round(random.uniform(1.5, 3.5), 2)
+                    logger.info(f"Adding random delay of {delay} seconds before processing keyword: {keyword}")
+                    time.sleep(delay)
+                    
+                    logger.info(f"Starting scrape for keyword: {keyword}")
+                    
+                    try:
+                        # Discover videos for this keyword using multiple approaches
+                        raw_videos = discover_videos(browser, keyword, MAX_VIDEOS_PER_KEYWORD)
+                        
+                        if not raw_videos:
+                            logger.warning(f"No videos found for keyword: {keyword}")
+                            failed_keywords.append(keyword)
+                            continue
+                            
+                        logger.info(f"Found {len(raw_videos)} raw videos for keyword: {keyword}")
+                        
+                        # Process each video
+                        keyword_videos = []
+                        for raw_video in raw_videos:
+                            try:
+                                # Extract basic video data
+                                video_data = extract_video_data(raw_video, keyword)
+                                
+                                # Extract statistics and calculate performance metrics
+                                stats = extract_statistics(raw_video)
+                                video_data['statistics'] = stats
+                                
+                                # Calculate performance score
+                                performance_score = calculate_performance_score(stats)
+                                video_data['statistics']['performance_score'] = performance_score
+                                
+                                # Determine if trending
+                                video_is_trending = is_trending(stats, min_views=MIN_VIEWS, min_engagement=MIN_ENGAGEMENT_RATE)
+                                video_data['is_trending'] = video_is_trending
+                                
+                                # Only include trending videos if configured
+                                if TRENDING_ONLY and not video_is_trending:
+                                    continue
+                                    
+                                # Add to keyword videos
+                                keyword_videos.append(video_data)
+                                
+                            except Exception as e:
+                                logger.error(f"Error processing video for keyword {keyword}: {str(e)}")
+                        
+                        logger.info(f"Successfully processed {len(keyword_videos)} videos for keyword: {keyword}")
+                        
+                        # Sort videos by performance if configured
+                        if SORT_BY_PERFORMANCE and keyword_videos:
+                            keyword_videos.sort(
+                                key=lambda x: x['statistics']['performance_score'] 
+                                if 'statistics' in x and 'performance_score' in x['statistics'] 
+                                else 0,
+                                reverse=True
+                            )
+                            
+                        # Add videos to overall results
+                        all_videos.extend(keyword_videos)
+                        successful_keywords.append(keyword)
+                        
+                    except Exception as e:
+                        logger.error(f"Failed to scrape keyword {keyword}: {str(e)}")
+                        failed_keywords.append(keyword)
+                
+            finally:
+                # Close browser after processing batch
+                browser.close()
+                
+            # Optional delay between batches
             if batch_idx < len(keyword_batches) - 1:
-                delay = random.uniform(5.0, 15.0)
-                logger.info(f"Adding delay of {delay:.2f}s between batches")
-                await asyncio.sleep(delay)
-    else:
-        # Process each keyword sequentially
-        for keyword in KEYWORDS:
-            videos = await scrape_keyword(keyword)
+                batch_delay = round(random.uniform(3.0, 7.0), 2)
+                logger.info(f"Batch {batch_idx+1} complete. Taking a {batch_delay} second break before next batch.")
+                time.sleep(batch_delay)
+        
+        # Limit to maximum total videos if specified and sort by performance
+        if MAX_TOTAL_VIDEOS > 0 and len(all_videos) > MAX_TOTAL_VIDEOS:
+            logger.info(f"Limiting results to {MAX_TOTAL_VIDEOS} videos with highest performance scores")
             
-            # Add to our total list
-            all_videos.extend(videos)
+            # Sort all videos by performance score
+            all_videos.sort(
+                key=lambda x: x['statistics']['performance_score'] 
+                if 'statistics' in x and 'performance_score' in x['statistics'] 
+                else 0,
+                reverse=True
+            )
             
-            # Update successful/failed keywords
-            if len(videos) >= MIN_VIDEOS_REQUIRED:
-                successful_keywords.append(keyword)
-            else:
-                failed_keywords.append(keyword)
-    
-    # Final sorting of all videos by performance and limit to top MAX_TOTAL_VIDEOS
-    if SORT_BY_PERFORMANCE and all_videos:
-        logger.info(f"Sorting all videos by performance score")
-        all_videos.sort(key=lambda x: x.get('performance_score', 0), reverse=True)
-        all_videos = all_videos[:MAX_TOTAL_VIDEOS]
-        logger.info(f"Keeping top {MAX_TOTAL_VIDEOS} videos for this scraping session")
-    
-    logger.info(f"Total videos scraped: {len(all_videos)}")
-    logger.info(f"Successful keywords: {len(successful_keywords)} - {', '.join(successful_keywords)}")
-    logger.info(f"Failed keywords: {len(failed_keywords)} - {', '.join(failed_keywords)}")
-    
-    # Only proceed if we have videos
-    if not all_videos:
-        logger.error("No trending videos were scraped. Exiting without saving.")
-        return
-    
-    # Timestamp for filenames
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
-    # Save results in requested formats
-    if 'json' in OUTPUT_FORMATS:
-        json_path = output_dir / f"trending_videos_{timestamp}.json"
-        save_to_json(all_videos, json_path)
-    
-    if 'csv' in OUTPUT_FORMATS:
-        csv_path = output_dir / f"trending_videos_{timestamp}.csv"
-        save_to_csv(all_videos, csv_path)
-    
-    # Update Google Sheets if enabled
-    if 'google_sheets' in OUTPUT_FORMATS and GOOGLE_SHEETS_ENABLED and all_videos:
-        try:
-            logger.info("Updating Google Sheets...")
-            success = update_google_sheet(all_videos)
-            if success:
-                logger.info("Google Sheets update successful")
-            else:
-                logger.error("Failed to update Google Sheets")
-        except Exception as e:
-            logger.error(f"Error updating Google Sheets: {str(e)}")
-    
-    logger.info("Trending video scraping completed successfully")
+            # Keep only the top videos
+            all_videos = all_videos[:MAX_TOTAL_VIDEOS]
+        
+        # Check if we have any videos
+        if not all_videos:
+            logger.warning("No videos collected. Exiting without saving data.")
+            return
+            
+        # Create output directory if it doesn't exist
+        output_dir = Path(OUTPUT_DIR)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save results
+        if SAVE_JSON:
+            json_file = output_dir / f"scraped_videos_{timestamp}.json"
+            save_to_json(all_videos, str(json_file))
+            
+        if SAVE_CSV:
+            csv_file = output_dir / f"scraped_videos_{timestamp}.csv"
+            save_to_csv(all_videos, str(csv_file))
+            
+        # Generate trending report
+        export_trending_report(all_videos, str(output_dir), f"trending_videos_{timestamp}")
+        
+        # Update Google Sheets if configured
+        if UPDATE_GOOGLE_SHEETS:
+            update_google_sheet(all_videos)
+            
+        # Log completion info
+        end_time = datetime.now()
+        duration = (end_time - start_time).total_seconds() / 60.0
+        
+        logger.info(f"Scraping completed in {duration:.2f} minutes")
+        logger.info(f"Total videos collected: {len(all_videos)}")
+        logger.info(f"Successful keywords ({len(successful_keywords)}): {', '.join(successful_keywords)}")
+        logger.info(f"Failed keywords ({len(failed_keywords)}): {', '.join(failed_keywords)}")
+        
+    except Exception as e:
+        logger.error(f"Error in main execution: {str(e)}")
 
 if __name__ == "__main__":
-    try:
-        # Add signal handlers if on Unix-like systems
-        if os.name != 'nt':  # Not Windows
-            import signal
-            
-            def signal_handler(sig, frame):
-                logger.info("Received signal to terminate, shutting down...")
-                sys.exit(0)
-                
-            signal.signal(signal.SIGINT, signal_handler)
-            signal.signal(signal.SIGTERM, signal_handler)
-            
-        # Run the main async function
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        logger.info("Keyboard interrupt received, shutting down...")
-    except Exception as e:
-        logger.error(f"Unhandled exception: {str(e)}")
-        sys.exit(1) 
+    main() 
