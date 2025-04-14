@@ -14,7 +14,7 @@ import random
 import time
 import operator
 
-from utils.logger import get_logger
+from utils.logger import get_logger, configure_logging
 from config import (
     KEYWORDS, 
     MAX_VIDEOS_PER_KEYWORD, 
@@ -28,133 +28,116 @@ from config import (
     MIN_VIEWS,
     MIN_ENGAGEMENT_RATE,
     SORT_BY_PERFORMANCE,
-    MAX_TOTAL_VIDEOS
+    MAX_TOTAL_VIDEOS,
+    LOG_LEVEL,
+    LOG_FILE,
+    MAX_VIDEO_AGE_DAYS
 )
 from scraper.tiktok_api import get_videos_for_tag
-from scraper.video_parser import parse_video_data
+from scraper.video_parser import parse_video_data, is_trending, is_recent_video, calculate_performance_score
 
 # Conditionally import Google Sheets module only if enabled
 if 'google_sheets' in OUTPUT_FORMATS and GOOGLE_SHEETS_ENABLED:
     from utils.sheets_helper import update_google_sheet
 
+# Configure logging
+configure_logging(LOG_LEVEL, LOG_FILE)
 logger = get_logger()
 
-def calculate_performance_score(video):
-    """
-    Calculate a performance score for a video based on engagement metrics.
-    
-    Args:
-        video (dict): Video data containing engagement metrics
-        
-    Returns:
-        float: Performance score
-    """
-    # Extract metrics with fallbacks to 0
-    stats = video.get('statistics', {})
-    views = stats.get('views', 0)
-    likes = stats.get('likes', 0)
-    comments = stats.get('comments', 0)
-    shares = stats.get('shares', 0)
-    
-    # Guard against zero views
-    if views == 0:
-        views = 1
-    
-    # Calculate engagement rate (likes + comments + shares) / views
-    engagement_rate = (likes + comments + shares) / views
-    
-    # Calculate virality score
-    virality_score = (likes * 1) + (comments * 2) + (shares * 3)
-    
-    # Calculate overall performance (weighted)
-    performance = (views * 0.4) + (virality_score * 0.5) + (engagement_rate * 10000 * 0.1)
-    
-    # Add performance score to video data
-    video['performance_score'] = round(performance, 2)
-    video['engagement_rate'] = round(engagement_rate * 100, 2)  # as percentage
-    
-    return performance
+def save_to_json(videos, output_file):
+    """Save videos to JSON file."""
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(videos, f, indent=4, ensure_ascii=False)
+    logger.info(f"Saved {len(videos)} videos to {output_file}")
 
-def is_trending(video):
-    """
-    Determine if a video meets trending criteria.
-    
-    Args:
-        video (dict): Video data
+def save_to_csv(videos, output_file):
+    """Save videos to CSV file."""
+    if not videos:
+        logger.warning("No videos to save to CSV")
+        return
         
-    Returns:
-        bool: True if video is trending
-    """
-    if not TRENDING_ONLY:
-        return True
+    # Get all possible fields from the videos
+    fieldnames = set()
+    for video in videos:
+        fieldnames.update(video.keys())
+        fieldnames.update([f"statistics_{key}" for key in video.get('statistics', {})])
         
-    stats = video.get('statistics', {})
-    views = stats.get('views', 0)
-    likes = stats.get('likes', 0)
-    comments = stats.get('comments', 0)
-    shares = stats.get('shares', 0)
+    fieldnames = sorted(list(fieldnames))
     
-    # Guard against zero views
-    if views == 0:
-        return False
-    
-    # Calculate engagement rate
-    engagement = likes + comments + shares
-    engagement_rate = engagement / views
-    
-    # Check if video meets trending criteria
-    if views >= MIN_VIEWS and engagement_rate >= MIN_ENGAGEMENT_RATE:
-        return True
-    
-    return False
+    # Remove the statistics dictionary from fieldnames since we'll expand it
+    if 'statistics' in fieldnames:
+        fieldnames.remove('statistics')
+        
+    with open(output_file, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        
+        for video in videos:
+            # Create a flat dictionary for CSV
+            row = video.copy()
+            
+            # Expand statistics into separate columns
+            if 'statistics' in row:
+                for key, value in row['statistics'].items():
+                    row[f'statistics_{key}'] = value
+                del row['statistics']
+                
+            # Handle lists by converting them to strings
+            for key, value in row.items():
+                if isinstance(value, list):
+                    row[key] = ', '.join(map(str, value))
+                    
+            writer.writerow(row)
+            
+    logger.info(f"Saved {len(videos)} videos to {output_file}")
 
-async def scrape_keyword(keyword):
+async def scrape_keyword(keyword, min_views=1000, min_engagement_rate=0.01, max_videos=100, max_age_days=14):
     """
-    Scrape TikTok videos for a specific keyword/niche.
+    Scrape videos for a specific keyword.
     
     Args:
-        keyword (str): The keyword to search for
+        keyword (str): Keyword to scrape videos for
+        min_views (int): Minimum views for trending videos
+        min_engagement_rate (float): Minimum engagement rate for trending videos
+        max_videos (int): Maximum number of videos to return
+        max_age_days (int): Maximum age of videos in days
         
     Returns:
-        list: List of processed video data
+        list: Trending videos for the keyword
     """
     logger.info(f"Starting scrape for keyword: {keyword}")
     
     # Add a random delay between keywords to appear more natural
-    if random.random() < 0.7:  # 70% chance of delay
-        delay = random.uniform(1.0, 5.0)
-        logger.info(f"Adding random delay of {delay:.2f}s before processing '{keyword}'")
-        await asyncio.sleep(delay)
+    delay = round(random.uniform(1, 5), 2)
+    logger.info(f"Adding random delay of {delay}s before processing '{keyword}'")
+    await asyncio.sleep(delay)
     
-    # Get raw video data from TikTok
-    raw_videos = await get_videos_for_tag(keyword, MAX_VIDEOS_PER_KEYWORD)
+    # Get videos for the keyword
+    videos = await get_videos_for_tag(keyword, max_videos=max_videos)
     
-    # Process each video to extract structured data
-    processed_videos = []
-    for video in raw_videos:
-        processed_data = parse_video_data(video)
-        processed_data["keyword"] = keyword  # Add the source keyword
+    if not videos:
+        logger.warning(f"No videos found for keyword: {keyword}")
+        return []
         
-        # Add timestamp fields
-        current_time = datetime.now()
-        processed_data["scrape_date"] = current_time.strftime("%Y-%m-%d")
-        processed_data["scrape_time"] = current_time.strftime("%H:%M:%S")
-        
-        # Check if video meets trending criteria
-        if is_trending(processed_data):
-            # Calculate performance score
-            calculate_performance_score(processed_data)
-            processed_videos.append(processed_data)
+    logger.info(f"Found {len(videos)} videos for keyword: {keyword}")
     
-    # Sort videos by performance score if enabled
-    if SORT_BY_PERFORMANCE:
-        processed_videos.sort(key=lambda x: x.get('performance_score', 0), reverse=True)
+    # Filter for trending videos within the past two weeks
+    trending_videos = []
+    for video in videos:
+        # Check if video is recent
+        if not is_recent_video(video["timestamp"], max_age_days=max_age_days):
+            continue
+            
+        # Check if video is trending
+        if TRENDING_ONLY and not is_trending(video, min_views=min_views, min_engagement_rate=min_engagement_rate):
+            continue
+            
+        # Add keyword to the video data
+        video["keyword"] = keyword
+        trending_videos.append(video)
     
-    # Limit to top MAX_VIDEOS_PER_KEYWORD
-    processed_videos = processed_videos[:MAX_VIDEOS_PER_KEYWORD]
-    
-    logger.info(f"Processed {len(processed_videos)} trending videos for keyword: {keyword}")
-    return processed_videos
+    logger.info(f"Processed {len(trending_videos)} trending videos for keyword: {keyword}")
+    return trending_videos
 
 async def process_keywords_batch(keywords_batch):
     """
@@ -255,41 +238,11 @@ async def main():
     # Save results in requested formats
     if 'json' in OUTPUT_FORMATS:
         json_path = output_dir / f"trending_videos_{timestamp}.json"
-        with open(json_path, 'w', encoding='utf-8') as f:
-            json.dump(all_videos, f, indent=2, ensure_ascii=False)
-        logger.info(f"Saved trending videos to JSON: {json_path}")
+        save_to_json(all_videos, json_path)
     
     if 'csv' in OUTPUT_FORMATS:
         csv_path = output_dir / f"trending_videos_{timestamp}.csv"
-        if all_videos:
-            # Ensure view count and performance metrics are in the priority columns
-            priority_keys = ['url', 'author', 'keyword', 'performance_score', 'engagement_rate', 
-                             'scrape_date', 'scrape_time', 'timestamp']
-            
-            # Get statistics keys
-            stats_keys = []
-            if 'statistics' in all_videos[0]:
-                stats_keys = [f"stats_{k}" for k in all_videos[0]['statistics'].keys()]
-            
-            # Get all other keys
-            other_keys = [k for k in all_videos[0].keys() if k not in priority_keys and k != 'statistics']
-            
-            # Final column order
-            ordered_keys = priority_keys + stats_keys + other_keys
-            
-            # Flatten statistics for CSV output
-            for video in all_videos:
-                stats = video.get('statistics', {})
-                for key, value in stats.items():
-                    video[f"stats_{key}"] = value
-            
-            with open(csv_path, 'w', newline='', encoding='utf-8') as f:
-                dict_writer = csv.DictWriter(f, ordered_keys)
-                dict_writer.writeheader()
-                dict_writer.writerows(all_videos)
-            logger.info(f"Saved trending videos to CSV: {csv_path}")
-        else:
-            logger.warning("No videos to save to CSV")
+        save_to_csv(all_videos, csv_path)
     
     # Update Google Sheets if enabled
     if 'google_sheets' in OUTPUT_FORMATS and GOOGLE_SHEETS_ENABLED and all_videos:

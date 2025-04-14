@@ -5,8 +5,10 @@ Module to parse and extract data from TikTok videos.
 import sys
 from pathlib import Path
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
+import time
+import json
 
 sys.path.append(str(Path(__file__).parent.parent))
 from utils.logger import get_logger
@@ -15,54 +17,45 @@ logger = get_logger()
 
 def extract_hook(description, max_words=15):
     """
-    Extract the hook/attention grabber from video description.
+    Extract hook from video description.
     
     Args:
-        description (str): The video description or caption
-        max_words (int): Maximum number of words to consider as the hook
+        description (str): Video description text
+        max_words (int): Maximum number of words to include in hook
         
     Returns:
-        str: The extracted hook text
+        str: Extracted hook
     """
     if not description:
         return ""
         
-    # Clean the description
-    cleaned = description.strip()
+    # Get the first few words as the hook (or the entire description if it's short)
+    words = description.split()
+    if len(words) <= max_words:
+        return description
     
-    # Extract the first sentence or first N words
-    first_sentence_match = re.match(r'^(.*?[.!?])\s', cleaned)
-    
-    if first_sentence_match:
-        hook = first_sentence_match.group(1)
-    else:
-        # If no sentence ending found, use the first N words
-        words = cleaned.split()
-        hook = " ".join(words[:min(len(words), max_words)])
-        
-    logger.debug(f"Extracted hook: {hook}")
-    return hook
-    
+    return " ".join(words[:max_words]) + "..."
+
 def extract_hashtags_from_text(text):
     """
-    Extract hashtags from text content.
+    Extract hashtags from text.
     
     Args:
         text (str): Text to extract hashtags from
         
     Returns:
-        list: List of hashtags (without # symbol)
+        list: List of hashtags
     """
     if not text:
         return []
         
-    # Find all hashtags using regex
+    # Find all hashtags in the text
     hashtags = re.findall(r'#(\w+)', text)
     return hashtags
-    
+
 def extract_statistics(raw_video):
     """
-    Extract statistical information from a TikTok video.
+    Extract simplified statistical information from a TikTok video.
     
     Args:
         raw_video (dict): Raw video data from TikTok
@@ -72,10 +65,10 @@ def extract_statistics(raw_video):
     """
     stats = {}
     
-    # Extract view count - critically important for trending videos
+    # Extract view count
     view_count = 0
     try:
-        # Different possible locations for view count in the API response
+        # Check different possible locations for view count
         if 'playCount' in raw_video:
             view_count = int(raw_video['playCount'])
         elif 'stats' in raw_video and 'playCount' in raw_video['stats']:
@@ -115,67 +108,52 @@ def extract_statistics(raw_video):
         
     stats['comments'] = comment_count
     
-    # Extract share count
-    share_count = 0
-    try:
-        if 'shareCount' in raw_video:
-            share_count = int(raw_video['shareCount'])
-        elif 'stats' in raw_video and 'shareCount' in raw_video['stats']:
-            share_count = int(raw_video['stats']['shareCount'])
-    except (ValueError, TypeError) as e:
-        logger.warning(f"Error parsing share count: {e}")
-        
-    stats['shares'] = share_count
-    
-    # Extract favorite count if available
-    fav_count = 0
-    try:
-        if 'collectCount' in raw_video:
-            fav_count = int(raw_video['collectCount'])
-        elif 'stats' in raw_video and 'collectCount' in raw_video['stats']:
-            fav_count = int(raw_video['stats']['collectCount'])
-        elif 'stats' in raw_video and 'favoriteCount' in raw_video['stats']:
-            fav_count = int(raw_video['stats']['favoriteCount'])
-    except (ValueError, TypeError) as e:
-        logger.warning(f"Error parsing favorite count: {e}")
-        
-    stats['favorites'] = fav_count
-    
     return stats
 
 def parse_timestamp(raw_timestamp):
     """
-    Parse a timestamp from TikTok into a standardized format.
+    Parse timestamp from TikTok raw timestamp.
     
     Args:
-        raw_timestamp: Raw timestamp value from TikTok API
+        raw_timestamp (int): Raw timestamp value
         
     Returns:
-        str: Formatted timestamp string
+        str: Formatted timestamp in ISO format
     """
     try:
-        # Handle different timestamp formats
-        if isinstance(raw_timestamp, str):
-            if raw_timestamp.isdigit():
-                # Unix timestamp in seconds
-                timestamp = datetime.fromtimestamp(int(raw_timestamp))
-            else:
-                # Try to parse the string directly
-                timestamp = datetime.strptime(raw_timestamp, "%Y-%m-%d %H:%M:%S")
-        elif isinstance(raw_timestamp, int):
-            # Unix timestamp in seconds or milliseconds
-            if raw_timestamp > 1000000000000:  # Milliseconds
-                timestamp = datetime.fromtimestamp(raw_timestamp / 1000)
-            else:  # Seconds
-                timestamp = datetime.fromtimestamp(raw_timestamp)
-        else:
-            # Default to current time if unable to parse
-            timestamp = datetime.now()
-            
-        return timestamp.strftime("%Y-%m-%d %H:%M:%S")
-    except Exception as e:
+        # Convert to datetime object
+        if isinstance(raw_timestamp, str) and raw_timestamp.isdigit():
+            raw_timestamp = int(raw_timestamp)
+        
+        dt = datetime.fromtimestamp(raw_timestamp)
+        return dt.isoformat()
+    except (ValueError, TypeError) as e:
         logger.warning(f"Error parsing timestamp: {e}")
-        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return datetime.now().isoformat()
+
+def is_recent_video(timestamp, max_age_days=14):
+    """
+    Check if a video is recent (within the specified number of days).
+    
+    Args:
+        timestamp (str): Video timestamp in ISO format
+        max_age_days (int): Maximum age in days
+        
+    Returns:
+        bool: True if video is within the max age, False otherwise
+    """
+    try:
+        # Convert ISO timestamp to datetime
+        video_date = datetime.fromisoformat(timestamp)
+        
+        # Calculate max age threshold
+        max_age_threshold = datetime.now() - timedelta(days=max_age_days)
+        
+        # Return True if video is newer than the threshold
+        return video_date >= max_age_threshold
+    except Exception as e:
+        logger.warning(f"Error checking if video is recent: {e}")
+        return True  # Include by default if we can't determine age
 
 def extract_hashtags(description):
     """
@@ -196,7 +174,7 @@ def extract_hashtags(description):
 
 def parse_video_data(raw_video):
     """
-    Parse raw video data into a structured format.
+    Parse raw video data into a simplified structured format.
     
     Args:
         raw_video (dict): Raw video data from TikTok
@@ -207,15 +185,15 @@ def parse_video_data(raw_video):
     # Initialize with default values
     video_data = {
         "url": "",
-        "id": "",
         "description": "",
         "author": "",
-        "author_id": "",
-        "timestamp": "",
-        "music": "",
+        "timestamp": datetime.now().isoformat(),
         "hashtags": [],
-        "duration": 0,
-        "statistics": {}
+        "statistics": {
+            "views": 0,
+            "likes": 0,
+            "comments": 0
+        }
     }
     
     # Check if raw_video is a dictionary, otherwise return default values
@@ -225,18 +203,15 @@ def parse_video_data(raw_video):
     
     # Extract basic video information
     try:
-        # Video ID
-        video_data["id"] = raw_video.get("id", "")
-        
         # Video URL
         if "id" in raw_video:
             video_id = raw_video["id"]
             author = raw_video.get("author", {})
             if isinstance(author, dict):
                 author_id = author.get("uniqueId", "")
+                video_data["author"] = author_id
                 video_data["url"] = f"https://www.tiktok.com/@{author_id}/video/{video_id}"
             else:
-                # Handle the case when author is a string or other non-dict type
                 video_data["url"] = f"https://www.tiktok.com/video/{video_id}"
         
         # Video description
@@ -245,33 +220,64 @@ def parse_video_data(raw_video):
         # Extract hashtags from description
         video_data["hashtags"] = extract_hashtags(video_data["description"])
         
-        # Author information
-        if "author" in raw_video and isinstance(raw_video["author"], dict):
-            author_data = raw_video["author"]
-            video_data["author"] = author_data.get("uniqueId", "")
-            video_data["author_id"] = author_data.get("id", "")
-            video_data["author_name"] = author_data.get("nickname", "")
-            video_data["author_verified"] = author_data.get("verified", False)
-            video_data["author_follower_count"] = author_data.get("followerCount", 0)
-        
         # Timestamp
         if "createTime" in raw_video:
             video_data["timestamp"] = parse_timestamp(raw_video["createTime"])
         
-        # Music information
-        if "music" in raw_video and isinstance(raw_video["music"], dict):
-            music_data = raw_video["music"]
-            video_data["music"] = music_data.get("title", "")
-            video_data["music_author"] = music_data.get("authorName", "")
-        
-        # Video duration
-        if "video" in raw_video and isinstance(raw_video["video"], dict) and "duration" in raw_video["video"]:
-            video_data["duration"] = int(raw_video["video"]["duration"])
-        
-        # Statistics (likes, comments, shares, views)
+        # Statistics (likes, comments, views)
         video_data["statistics"] = extract_statistics(raw_video)
         
     except Exception as e:
         logger.error(f"Error parsing video data: {e}")
     
-    return video_data 
+    return video_data
+
+def is_trending(video_data, min_views=1000, min_engagement_rate=0.01):
+    """
+    Determine if a video is trending based on views and engagement.
+    
+    Args:
+        video_data (dict): Parsed video data
+        min_views (int): Minimum number of views to be considered trending
+        min_engagement_rate (float): Minimum engagement rate to be considered trending
+        
+    Returns:
+        bool: True if video is trending, False otherwise
+    """
+    # Check if video has enough views
+    if video_data["statistics"]["views"] < min_views:
+        return False
+    
+    # Calculate engagement rate
+    views = video_data["statistics"]["views"]
+    if views <= 0:
+        return False
+    
+    likes = video_data["statistics"]["likes"]
+    comments = video_data["statistics"]["comments"]
+    
+    engagement = likes + comments
+    engagement_rate = engagement / views
+    
+    # Check if engagement rate meets minimum threshold
+    return engagement_rate >= min_engagement_rate
+
+def calculate_performance_score(video_data):
+    """
+    Calculate a performance score for a video based on views and engagement.
+    
+    Args:
+        video_data (dict): Parsed video data
+        
+    Returns:
+        float: Performance score
+    """
+    views = video_data["statistics"]["views"]
+    likes = video_data["statistics"]["likes"]
+    comments = video_data["statistics"]["comments"]
+    
+    # Basic formula: views + (likes * 2) + (comments * 3)
+    # This prioritizes engagement over just views
+    score = views + (likes * 2) + (comments * 3)
+    
+    return score 
