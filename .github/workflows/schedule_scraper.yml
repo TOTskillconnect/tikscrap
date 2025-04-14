@@ -43,43 +43,28 @@ jobs:
             exit 1
           fi
           
-          # Install system dependencies for Playwright that are available in Ubuntu 24.04
-          sudo apt-get update
-          sudo apt-get install -y \
-            fonts-noto-color-emoji \
-            fonts-liberation \
-            libatk-bridge2.0-0 \
-            libatk1.0-0 \
-            libcups2 \
-            libdbus-1-3 \
-            libdrm2 \
-            libgbm1 \
-            libglib2.0-0 \
-            libgtk-3-0 \
-            libnspr4 \
-            libnss3 \
-            libpango-1.0-0 \
-            libpangocairo-1.0-0 \
-            libxcomposite1 \
-            libxdamage1 \
-            libxfixes3 \
-            libxkbcommon0 \
-            libxrandr2 \
-            xvfb \
-            libegl1
+          # Skip browser installation completely for GitHub Actions
+          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
           
-          # Try installing browser directly
-          echo "Attempting to install Chromium without system dependencies"
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 pip install playwright
+          # Create directories Playwright would look for
           mkdir -p $HOME/.cache/ms-playwright
           
-          # Try alternative method if the first one fails
-          echo "Installing Chromium browser using npm"
-          sudo apt-get install -y npm
-          npm install -g playwright-chromium
-          
-          # Set environment variable to indicate browser issues
+          # Install minimal system dependencies that are known to be available
+          echo "Installing only essential system dependencies"
+          sudo apt-get update
+          sudo apt-get install -y \
+            fonts-liberation \
+            libnss3 \
+            libatk1.0-0 \
+            libatk-bridge2.0-0 \
+            libcups2 \
+            libdrm2 \
+            libxkbcommon0 \
+            xvfb
+            
+          # Force NO_BROWSER mode for the script
           echo "NO_BROWSER=1" >> $GITHUB_ENV
+          echo "Using NO_BROWSER mode to avoid browser dependency issues"
         
       - name: Set up Google credentials
         if: ${{ github.event_name != 'pull_request' }}

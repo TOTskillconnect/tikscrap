@@ -38,7 +38,7 @@ from scraper.video_parser import extract_video_data, extract_statistics, calcula
 from utils.data_saver import save_to_json, save_to_csv, update_google_sheet, export_trending_report
 
 # Check for NO_BROWSER environment variable
-NO_BROWSER = os.environ.get('NO_BROWSER', '0') == '1'
+NO_BROWSER = os.environ.get('NO_BROWSER', '0').lower() in ('1', 'true', 'yes', 'y')
 
 def generate_sample_data(keyword: str, count: int = 5) -> List[Dict[str, Any]]:
     """
@@ -93,29 +93,78 @@ def main():
     
     logger.info("Starting TikTok Niche Scraper with enhanced stealth techniques")
     
-    if NO_BROWSER:
+    # Check for NO_BROWSER mode - also check if playwright is available
+    use_no_browser = NO_BROWSER
+    if not use_no_browser:
+        try:
+            # Check if playwright is properly installed
+            import playwright
+            from playwright.sync_api import sync_playwright
+            logger.info("Playwright is available")
+        except (ImportError, Exception) as e:
+            logger.warning(f"Playwright is not properly installed or configured: {str(e)}")
+            logger.warning("Falling back to NO_BROWSER mode")
+            use_no_browser = True
+    
+    if use_no_browser:
         logger.warning("Running in NO_BROWSER mode - will generate sample data instead of scraping")
+        # Create output directories in advance for CI/CD environments
+        try:
+            # Ensure output directory exists
+            output_dir = Path(OUTPUT_DIR)
+            output_dir.mkdir(parents=True, exist_ok=True)
+            logger.info(f"Created output directory: {OUTPUT_DIR}")
+        except Exception as e:
+            logger.error(f"Failed to create output directory: {str(e)}")
+            # Use a fallback directory if the configured one fails
+            output_dir = Path("data")
+            output_dir.mkdir(parents=True, exist_ok=True)
+            logger.info(f"Using fallback output directory: data")
+        
         # Process all keywords at once in NO_BROWSER mode
         all_videos = []
-        for keyword in KEYWORDS:
-            sample_videos = generate_sample_data(keyword, count=5)
-            all_videos.extend(sample_videos)
+        successful_keywords = []
+        failed_keywords = []
         
-        # Create output directory if it doesn't exist
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_dir = Path(OUTPUT_DIR)
-        output_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Save results
-        if SAVE_JSON:
-            json_file = output_dir / f"sample_data_{timestamp}.json"
-            save_to_json(all_videos, str(json_file))
+        try:
+            # Generate sample data for each keyword
+            for keyword in KEYWORDS:
+                try:
+                    sample_videos = generate_sample_data(keyword, count=5)
+                    all_videos.extend(sample_videos)
+                    successful_keywords.append(keyword)
+                except Exception as e:
+                    logger.error(f"Error generating sample data for keyword {keyword}: {str(e)}")
+                    failed_keywords.append(keyword)
             
-        if SAVE_CSV:
-            csv_file = output_dir / f"sample_data_{timestamp}.csv"
-            save_to_csv(all_videos, str(csv_file))
-        
-        logger.info(f"Generated sample data for {len(KEYWORDS)} keywords, total videos: {len(all_videos)}")
+            # Create timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            
+            # Save results
+            if SAVE_JSON:
+                try:
+                    json_file = output_dir / f"sample_data_{timestamp}.json"
+                    save_to_json(all_videos, str(json_file))
+                    logger.info(f"Saved sample data to JSON: {json_file}")
+                except Exception as e:
+                    logger.error(f"Failed to save JSON data: {str(e)}")
+                
+            if SAVE_CSV:
+                try:
+                    csv_file = output_dir / f"sample_data_{timestamp}.csv"
+                    save_to_csv(all_videos, str(csv_file))
+                    logger.info(f"Saved sample data to CSV: {csv_file}")
+                except Exception as e:
+                    logger.error(f"Failed to save CSV data: {str(e)}")
+            
+            logger.info(f"Generated sample data for {len(successful_keywords)} keywords, total videos: {len(all_videos)}")
+            logger.info(f"Successful keywords: {', '.join(successful_keywords)}")
+            if failed_keywords:
+                logger.warning(f"Failed keywords: {', '.join(failed_keywords)}")
+                
+        except Exception as e:
+            logger.error(f"Unexpected error in NO_BROWSER mode: {str(e)}")
+            
         return
     
     logger.info(f"Browser visibility: {'Visible' if BROWSER_VISIBLE else 'Headless'}")
