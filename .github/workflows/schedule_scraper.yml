@@ -1,0 +1,49 @@
+name: Scheduled TikTok Scraper
+
+on:
+  schedule:
+    # Run daily at 03:00 UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:  # Allows manual triggering with the "Run workflow" button
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+        
+      - name: Set up Google credentials
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          if [ -n "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" ]; then
+            echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" > credentials.json
+            echo "Google credentials configured"
+          else
+            echo "No Google credentials provided, skipping Google Sheets integration"
+          fi
+        shell: bash
+          
+      - name: Run scraper
+        run: python main.py
+        
+      # Commit and push any new data files back to the repository
+      - name: Commit and push if there are changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/
+          git diff --quiet && git diff --staged --quiet || git commit -m "Add scraped data [automated]"
+          git push 
