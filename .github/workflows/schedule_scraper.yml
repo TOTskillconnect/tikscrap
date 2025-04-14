@@ -50,4 +50,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add tiktok-niche-scraper/data/
           git diff --quiet && git diff --staged --quiet || git commit -m "Add scraped data [automated]"
-          git push 
+          git push
