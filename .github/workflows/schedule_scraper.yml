@@ -19,10 +19,12 @@ jobs:
         with:
           python-version: '3.11'
           
+      - name: Copy requirements file to root
+        run: cp tiktok-niche-scraper/requirements.txt .
+          
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          cd tiktok-niche-scraper
           pip install -r requirements.txt
           playwright install --with-deps chromium
         
