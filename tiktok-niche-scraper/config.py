@@ -46,7 +46,10 @@ API_KEY = ""     # Your TikTok API key if using the API method
 
 # Output settings
 OUTPUT_FORMATS = ['json', 'csv']  # Options: 'json', 'csv', 'google_sheets'
-OUTPUT_DIRECTORY = 'data'
+OUTPUT_DIR = 'data'
+SAVE_JSON = True
+SAVE_CSV = True
+UPDATE_GOOGLE_SHEETS = False
 
 # Scheduler settings
 SCHEDULER_ENABLED = True
