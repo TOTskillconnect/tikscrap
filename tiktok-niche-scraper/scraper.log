@@ -1,0 +1,481 @@
+2025-04-13 19:29:16.333 | INFO     | __main__:main:57 - Starting TikTok Niche Scraper
+2025-04-13 19:29:16.344 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: ai tools
+2025-04-13 19:29:16.353 | INFO     | scraper.tiktok_api:get_videos_for_tag:39 - Fetching videos for keyword: ai tools
+2025-04-13 19:29:19.106 | INFO     | scraper.tiktok_api:get_videos_for_tag:81 - Found 0 videos for keyword: ai tools
+2025-04-13 19:29:19.112 | INFO     | __main__:scrape_keyword:52 - Processed 0 videos for keyword: ai tools
+2025-04-13 19:29:19.114 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: startup advice
+2025-04-13 19:29:19.120 | INFO     | scraper.tiktok_api:get_videos_for_tag:39 - Fetching videos for keyword: startup advice
+2025-04-13 19:29:21.418 | INFO     | scraper.tiktok_api:get_videos_for_tag:81 - Found 0 videos for keyword: startup advice
+2025-04-13 19:29:21.423 | INFO     | __main__:scrape_keyword:52 - Processed 0 videos for keyword: startup advice
+2025-04-13 19:29:21.426 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: productivity hacks
+2025-04-13 19:29:21.430 | INFO     | scraper.tiktok_api:get_videos_for_tag:39 - Fetching videos for keyword: productivity hacks
+2025-04-13 19:29:23.778 | INFO     | scraper.tiktok_api:get_videos_for_tag:81 - Found 0 videos for keyword: productivity hacks
+2025-04-13 19:29:23.785 | INFO     | __main__:scrape_keyword:52 - Processed 0 videos for keyword: productivity hacks
+2025-04-13 19:29:23.790 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: coding tips
+2025-04-13 19:29:23.794 | INFO     | scraper.tiktok_api:get_videos_for_tag:39 - Fetching videos for keyword: coding tips
+2025-04-13 19:29:25.285 | INFO     | scraper.tiktok_api:get_videos_for_tag:81 - Found 0 videos for keyword: coding tips
+2025-04-13 19:29:25.290 | INFO     | __main__:scrape_keyword:52 - Processed 0 videos for keyword: coding tips
+2025-04-13 19:29:25.295 | INFO     | __main__:main:70 - Total videos scraped: 0
+2025-04-13 19:29:25.301 | INFO     | __main__:main:80 - Saved results to JSON: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250413_192925.json
+2025-04-13 19:29:25.305 | WARNING  | __main__:main:92 - No videos to save to CSV
+2025-04-13 19:29:25.309 | INFO     | __main__:main:97 - Updating Google Sheets...
+2025-04-13 19:29:25.311 | WARNING  | utils.sheets_helper:update_google_sheet:70 - No data to update in Google Sheets
+2025-04-13 19:29:25.316 | ERROR    | __main__:main:102 - Failed to update Google Sheets
+2025-04-13 19:29:25.320 | INFO     | __main__:main:106 - Scraping completed successfully
+2025-04-13 19:30:20.810 | INFO     | __main__:main:57 - Starting TikTok Niche Scraper
+2025-04-13 19:30:20.818 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: ai tools
+2025-04-13 19:30:20.823 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: ai tools
+2025-04-13 19:30:22.470 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-13 19:30:22.474 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: ai tools
+2025-04-13 19:30:22.478 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: ai tools
+2025-04-13 19:30:22.483 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: startup advice
+2025-04-13 19:30:22.488 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: startup advice
+2025-04-13 19:30:24.029 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-13 19:30:24.032 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: startup advice
+2025-04-13 19:30:24.033 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: startup advice
+2025-04-13 19:30:24.037 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: productivity hacks
+2025-04-13 19:30:24.039 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: productivity hacks
+2025-04-13 19:30:25.104 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-13 19:30:25.107 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: productivity hacks
+2025-04-13 19:30:25.111 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: productivity hacks
+2025-04-13 19:30:25.113 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: coding tips
+2025-04-13 19:30:25.117 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: coding tips
+2025-04-13 19:30:26.101 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-13 19:30:26.103 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: coding tips
+2025-04-13 19:30:26.106 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: coding tips
+2025-04-13 19:30:26.109 | INFO     | __main__:main:70 - Total videos scraped: 60
+2025-04-13 19:30:26.118 | INFO     | __main__:main:80 - Saved results to JSON: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250413_193026.json
+2025-04-13 19:30:26.126 | INFO     | __main__:main:90 - Saved results to CSV: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250413_193026.csv
+2025-04-13 19:30:26.132 | INFO     | __main__:main:97 - Updating Google Sheets...
+2025-04-13 19:30:26.136 | ERROR    | utils.sheets_helper:get_credentials:47 - Credentials file client_secret.json not found
+2025-04-13 19:30:26.143 | ERROR    | __main__:main:102 - Failed to update Google Sheets
+2025-04-13 19:30:26.155 | INFO     | __main__:main:106 - Scraping completed successfully
+2025-04-13 19:30:59.913 | INFO     | __main__:main:57 - Starting TikTok Niche Scraper
+2025-04-13 19:30:59.922 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: ai tools
+2025-04-13 19:30:59.926 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: ai tools
+2025-04-13 19:31:01.504 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-13 19:31:01.506 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: ai tools
+2025-04-13 19:31:01.509 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: ai tools
+2025-04-13 19:31:01.513 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: startup advice
+2025-04-13 19:31:01.517 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: startup advice
+2025-04-13 19:31:02.538 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-13 19:31:02.545 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: startup advice
+2025-04-13 19:31:02.559 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: startup advice
+2025-04-13 19:31:02.566 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: productivity hacks
+2025-04-13 19:31:02.572 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: productivity hacks
+2025-04-13 19:31:03.790 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-13 19:31:03.795 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: productivity hacks
+2025-04-13 19:31:03.800 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: productivity hacks
+2025-04-13 19:31:03.803 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: coding tips
+2025-04-13 19:31:03.805 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: coding tips
+2025-04-13 19:31:05.011 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-13 19:31:05.016 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: coding tips
+2025-04-13 19:31:05.020 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: coding tips
+2025-04-13 19:31:05.023 | INFO     | __main__:main:70 - Total videos scraped: 60
+2025-04-13 19:31:05.030 | INFO     | __main__:main:80 - Saved results to JSON: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250413_193105.json
+2025-04-13 19:31:05.036 | INFO     | __main__:main:90 - Saved results to CSV: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250413_193105.csv
+2025-04-13 19:31:05.042 | INFO     | __main__:main:106 - Scraping completed successfully
+2025-04-14 12:23:36.865 | INFO     | __main__:main:57 - Starting TikTok Niche Scraper
+2025-04-14 12:23:36.868 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: ai tools
+2025-04-14 12:23:36.871 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: ai tools
+2025-04-14 12:23:37.767 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:23:37.771 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: ai tools
+2025-04-14 12:23:37.773 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: ai tools
+2025-04-14 12:23:37.774 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: startup advice
+2025-04-14 12:23:37.775 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: startup advice
+2025-04-14 12:23:38.539 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:23:38.542 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: startup advice
+2025-04-14 12:23:38.544 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: startup advice
+2025-04-14 12:23:38.545 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: productivity hacks
+2025-04-14 12:23:38.546 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: productivity hacks
+2025-04-14 12:23:39.171 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:23:39.175 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: productivity hacks
+2025-04-14 12:23:39.178 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: productivity hacks
+2025-04-14 12:23:39.181 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: coding tips
+2025-04-14 12:23:39.183 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: coding tips
+2025-04-14 12:23:39.809 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:23:39.812 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: coding tips
+2025-04-14 12:23:39.815 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: coding tips
+2025-04-14 12:23:39.818 | INFO     | __main__:main:70 - Total videos scraped: 60
+2025-04-14 12:23:39.823 | INFO     | __main__:main:80 - Saved results to JSON: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250414_122339.json
+2025-04-14 12:23:39.828 | INFO     | __main__:main:90 - Saved results to CSV: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250414_122339.csv
+2025-04-14 12:23:39.831 | INFO     | __main__:main:97 - Updating Google Sheets...
+2025-04-14 12:23:39.836 | ERROR    | utils.sheets_helper:get_credentials:47 - Credentials file client_secret.json not found
+2025-04-14 12:23:39.839 | ERROR    | __main__:main:102 - Failed to update Google Sheets
+2025-04-14 12:23:39.842 | INFO     | __main__:main:106 - Scraping completed successfully
+2025-04-14 12:26:27.728 | INFO     | __main__:main:57 - Starting TikTok Niche Scraper
+2025-04-14 12:26:27.731 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: ai tools
+2025-04-14 12:26:27.732 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: ai tools
+2025-04-14 12:26:28.589 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:26:28.591 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: ai tools
+2025-04-14 12:26:28.593 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: ai tools
+2025-04-14 12:26:28.595 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: startup advice
+2025-04-14 12:26:28.598 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: startup advice
+2025-04-14 12:26:29.271 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:26:29.274 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: startup advice
+2025-04-14 12:26:29.275 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: startup advice
+2025-04-14 12:26:29.276 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: productivity hacks
+2025-04-14 12:26:29.277 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: productivity hacks
+2025-04-14 12:26:29.939 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:26:29.942 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: productivity hacks
+2025-04-14 12:26:29.948 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: productivity hacks
+2025-04-14 12:26:29.956 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: coding tips
+2025-04-14 12:26:29.964 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: coding tips
+2025-04-14 12:26:30.655 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:26:30.659 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: coding tips
+2025-04-14 12:26:30.661 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: coding tips
+2025-04-14 12:26:30.663 | INFO     | __main__:main:70 - Total videos scraped: 60
+2025-04-14 12:26:30.666 | INFO     | __main__:main:80 - Saved results to JSON: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250414_122630.json
+2025-04-14 12:26:30.680 | INFO     | __main__:main:90 - Saved results to CSV: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250414_122630.csv
+2025-04-14 12:26:30.684 | INFO     | __main__:main:97 - Updating Google Sheets...
+2025-04-14 12:26:53.178 | ERROR    | utils.sheets_helper:update_google_sheet:109 - Error updating Google Sheet: <HttpError 400 when requesting https://sheets.googleapis.com/v4/spreadsheets/1fyDwvf3lh0sYUQty8E2H9H9_4BGo797eBqbVWLcMUQg/values/A1%3AZ1000?valueInputOption=RAW&alt=json returned "Invalid values[1][4]: list_value {
+  values {
+    string_value: "productivity"
+  }
+  values {
+    string_value: "contentcreation"
+  }
+  values {
+    string_value: "aitools"
+  }
+}". Details: "Invalid values[1][4]: list_value {
+  values {
+    string_value: "productivity"
+  }
+  values {
+    string_value: "contentcreation"
+  }
+  values {
+    string_value: "aitools"
+  }
+}
+">
+2025-04-14 12:26:53.183 | ERROR    | __main__:main:102 - Failed to update Google Sheets
+2025-04-14 12:26:53.187 | INFO     | __main__:main:106 - Scraping completed successfully
+2025-04-14 12:27:27.761 | INFO     | __main__:main:57 - Starting TikTok Niche Scraper
+2025-04-14 12:27:27.764 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: ai tools
+2025-04-14 12:27:27.768 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: ai tools
+2025-04-14 12:27:28.550 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:27:28.552 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: ai tools
+2025-04-14 12:27:28.554 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: ai tools
+2025-04-14 12:27:28.556 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: startup advice
+2025-04-14 12:27:28.559 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: startup advice
+2025-04-14 12:27:29.335 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:27:29.336 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: startup advice
+2025-04-14 12:27:29.337 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: startup advice
+2025-04-14 12:27:29.338 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: productivity hacks
+2025-04-14 12:27:29.339 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: productivity hacks
+2025-04-14 12:27:30.072 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:27:30.074 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: productivity hacks
+2025-04-14 12:27:30.077 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: productivity hacks
+2025-04-14 12:27:30.080 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: coding tips
+2025-04-14 12:27:30.083 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: coding tips
+2025-04-14 12:27:31.011 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Successfully fetched page, but TikTok requires JavaScript for content.
+2025-04-14 12:27:31.016 | INFO     | scraper.tiktok_api:generate_mock_data:106 - Generating 50 mock videos for keyword: coding tips
+2025-04-14 12:27:31.020 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: coding tips
+2025-04-14 12:27:31.022 | INFO     | __main__:main:70 - Total videos scraped: 60
+2025-04-14 12:27:31.026 | INFO     | __main__:main:80 - Saved results to JSON: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250414_122731.json
+2025-04-14 12:27:31.031 | INFO     | __main__:main:90 - Saved results to CSV: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250414_122731.csv
+2025-04-14 12:27:31.033 | INFO     | __main__:main:97 - Updating Google Sheets...
+2025-04-14 12:27:32.716 | INFO     | utils.sheets_helper:update_google_sheet:130 - Google Sheets updated: 427 cells updated
+2025-04-14 12:27:32.720 | INFO     | __main__:main:100 - Google Sheets update successful
+2025-04-14 12:27:32.722 | INFO     | __main__:main:106 - Scraping completed successfully
+2025-04-14 12:33:38.185 | INFO     | __main__:main:57 - Starting TikTok Niche Scraper
+2025-04-14 12:33:38.188 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: ai tools
+2025-04-14 12:33:38.190 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: ai tools
+2025-04-14 12:33:41.502 | INFO     | scraper.tiktok_api:get_videos_for_tag:75 - Navigating to https://www.tiktok.com/tag/aitools
+2025-04-14 12:33:53.231 | WARNING  | scraper.tiktok_api:get_videos_for_tag:85 - Timeout waiting for video selector, trying alternate: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("[data-e2e=\"recommend-list-item-container\"]") to be visible
+
+2025-04-14 12:33:58.247 | WARNING  | scraper.tiktok_api:get_videos_for_tag:90 - Alternate selector also failed, will scrape what's available
+2025-04-14 12:33:58.250 | INFO     | scraper.tiktok_api:get_videos_for_tag:93 - Scrolling to load more videos
+2025-04-14 12:34:08.475 | INFO     | scraper.tiktok_api:get_videos_for_tag:112 - Found 0 video elements on page
+2025-04-14 12:34:08.668 | INFO     | scraper.tiktok_api:get_videos_for_tag:179 - Successfully extracted 0 videos for keyword: ai tools
+2025-04-14 12:34:08.672 | WARNING  | scraper.tiktok_api:get_videos_for_tag:183 - No videos found, falling back to mock data
+2025-04-14 12:34:08.676 | INFO     | scraper.tiktok_api:generate_mock_data:233 - Generating 50 mock videos for keyword: ai tools
+2025-04-14 12:34:08.731 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: ai tools
+2025-04-14 12:34:08.735 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: startup advice
+2025-04-14 12:34:08.738 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: startup advice
+2025-04-14 12:34:09.915 | INFO     | scraper.tiktok_api:get_videos_for_tag:75 - Navigating to https://www.tiktok.com/tag/startupadvice
+2025-04-14 12:34:21.075 | WARNING  | scraper.tiktok_api:get_videos_for_tag:85 - Timeout waiting for video selector, trying alternate: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("[data-e2e=\"recommend-list-item-container\"]") to be visible
+
+2025-04-14 12:34:26.100 | WARNING  | scraper.tiktok_api:get_videos_for_tag:90 - Alternate selector also failed, will scrape what's available
+2025-04-14 12:34:26.104 | INFO     | scraper.tiktok_api:get_videos_for_tag:93 - Scrolling to load more videos
+2025-04-14 12:34:36.244 | INFO     | scraper.tiktok_api:get_videos_for_tag:112 - Found 0 video elements on page
+2025-04-14 12:34:36.412 | INFO     | scraper.tiktok_api:get_videos_for_tag:179 - Successfully extracted 0 videos for keyword: startup advice
+2025-04-14 12:34:36.414 | WARNING  | scraper.tiktok_api:get_videos_for_tag:183 - No videos found, falling back to mock data
+2025-04-14 12:34:36.415 | INFO     | scraper.tiktok_api:generate_mock_data:233 - Generating 50 mock videos for keyword: startup advice
+2025-04-14 12:34:36.432 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: startup advice
+2025-04-14 12:34:36.436 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: productivity hacks
+2025-04-14 12:34:36.439 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: productivity hacks
+2025-04-14 12:34:37.293 | INFO     | scraper.tiktok_api:get_videos_for_tag:75 - Navigating to https://www.tiktok.com/tag/productivityhacks
+2025-04-14 12:34:48.349 | WARNING  | scraper.tiktok_api:get_videos_for_tag:85 - Timeout waiting for video selector, trying alternate: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("[data-e2e=\"recommend-list-item-container\"]") to be visible
+
+2025-04-14 12:34:53.356 | WARNING  | scraper.tiktok_api:get_videos_for_tag:90 - Alternate selector also failed, will scrape what's available
+2025-04-14 12:34:53.359 | INFO     | scraper.tiktok_api:get_videos_for_tag:93 - Scrolling to load more videos
+2025-04-14 12:35:03.555 | INFO     | scraper.tiktok_api:get_videos_for_tag:112 - Found 0 video elements on page
+2025-04-14 12:35:03.710 | INFO     | scraper.tiktok_api:get_videos_for_tag:179 - Successfully extracted 0 videos for keyword: productivity hacks
+2025-04-14 12:35:03.713 | WARNING  | scraper.tiktok_api:get_videos_for_tag:183 - No videos found, falling back to mock data
+2025-04-14 12:35:03.715 | INFO     | scraper.tiktok_api:generate_mock_data:233 - Generating 50 mock videos for keyword: productivity hacks
+2025-04-14 12:35:03.737 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: productivity hacks
+2025-04-14 12:35:03.739 | INFO     | __main__:scrape_keyword:40 - Starting scrape for keyword: coding tips
+2025-04-14 12:35:03.741 | INFO     | scraper.tiktok_api:get_videos_for_tag:47 - Fetching videos for keyword: coding tips
+2025-04-14 12:35:04.785 | INFO     | scraper.tiktok_api:get_videos_for_tag:75 - Navigating to https://www.tiktok.com/tag/codingtips
+2025-04-14 12:35:15.931 | WARNING  | scraper.tiktok_api:get_videos_for_tag:85 - Timeout waiting for video selector, trying alternate: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("[data-e2e=\"recommend-list-item-container\"]") to be visible
+
+2025-04-14 12:35:20.940 | WARNING  | scraper.tiktok_api:get_videos_for_tag:90 - Alternate selector also failed, will scrape what's available
+2025-04-14 12:35:20.943 | INFO     | scraper.tiktok_api:get_videos_for_tag:93 - Scrolling to load more videos
+2025-04-14 12:35:31.263 | INFO     | scraper.tiktok_api:get_videos_for_tag:112 - Found 0 video elements on page
+2025-04-14 12:35:31.614 | INFO     | scraper.tiktok_api:get_videos_for_tag:179 - Successfully extracted 0 videos for keyword: coding tips
+2025-04-14 12:35:31.617 | WARNING  | scraper.tiktok_api:get_videos_for_tag:183 - No videos found, falling back to mock data
+2025-04-14 12:35:31.621 | INFO     | scraper.tiktok_api:generate_mock_data:233 - Generating 50 mock videos for keyword: coding tips
+2025-04-14 12:35:31.664 | INFO     | __main__:scrape_keyword:52 - Processed 15 videos for keyword: coding tips
+2025-04-14 12:35:31.667 | INFO     | __main__:main:70 - Total videos scraped: 60
+2025-04-14 12:35:31.697 | INFO     | __main__:main:80 - Saved results to JSON: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250414_123531.json
+2025-04-14 12:35:31.709 | INFO     | __main__:main:90 - Saved results to CSV: C:\Users\towoj\tiktokscrap\tiktok-niche-scraper\data\scraped_videos_20250414_123531.csv
+2025-04-14 12:35:31.756 | INFO     | __main__:main:97 - Updating Google Sheets...
+2025-04-14 12:35:33.925 | INFO     | utils.sheets_helper:update_google_sheet:130 - Google Sheets updated: 427 cells updated
+2025-04-14 12:35:33.933 | INFO     | __main__:main:100 - Google Sheets update successful
+2025-04-14 12:35:33.936 | INFO     | __main__:main:106 - Scraping completed successfully
+2025-04-14 12:49:16.955 | INFO     | __main__:main:88 - Starting TikTok Niche Scraper with enhanced stealth techniques
+2025-04-14 12:49:16.958 | INFO     | __main__:main:98 - Processing keywords in batches of 2
+2025-04-14 12:49:16.960 | INFO     | __main__:main:105 - Processing batch 1/13: budgeting, budget tracker
+2025-04-14 12:49:16.962 | INFO     | __main__:scrape_keyword:44 - Starting scrape for keyword: budgeting
+2025-04-14 12:49:16.965 | INFO     | __main__:scrape_keyword:49 - Adding random delay of 2.76s before processing 'budgeting'
+2025-04-14 12:49:16.967 | INFO     | __main__:scrape_keyword:44 - Starting scrape for keyword: budget tracker
+2025-04-14 12:49:16.970 | INFO     | __main__:scrape_keyword:49 - Adding random delay of 3.30s before processing 'budget tracker'
+2025-04-14 12:49:19.735 | INFO     | scraper.tiktok_api:get_videos_for_tag:42 - Fetching videos for keyword: budgeting
+2025-04-14 12:49:19.737 | INFO     | scraper.stealth_browser:launch:134 - Launching stealth browser
+2025-04-14 12:49:20.275 | INFO     | scraper.tiktok_api:get_videos_for_tag:42 - Fetching videos for keyword: budget tracker
+2025-04-14 12:49:20.278 | INFO     | scraper.stealth_browser:launch:134 - Launching stealth browser
+2025-04-14 12:49:26.328 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying user_profile approach for 'budgeting'
+2025-04-14 12:49:26.336 | INFO     | scraper.content_discovery:discover_via_user_profile:174 - Searching for users: https://www.tiktok.com/search/user?q=budgeting
+2025-04-14 12:49:29.413 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying search approach for 'budget tracker'
+2025-04-14 12:49:29.416 | INFO     | scraper.content_discovery:discover_via_search:61 - Discovering content via search: https://www.tiktok.com/search?q=budget%20tracker
+2025-04-14 12:49:30.141 | WARNING  | scraper.content_discovery:discover_via_user_profile:183 - No users found
+2025-04-14 12:49:30.148 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying hashtag approach for 'budgeting'
+2025-04-14 12:49:30.151 | INFO     | scraper.content_discovery:discover_via_hashtag:96 - Discovering content via hashtag: https://www.tiktok.com/tag/budgeting
+2025-04-14 12:49:31.184 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 12:49:31.628 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 12:54:08.422 | WARNING  | scraper.content_discovery:_extract_video_elements:269 - No video elements found on the page
+2025-04-14 12:54:08.569 | INFO     | scraper.content_discovery:discover_via_hashtag:111 - Discovered 0 videos via hashtag
+2025-04-14 12:54:08.579 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying explore approach for 'budgeting'
+2025-04-14 12:54:08.597 | INFO     | scraper.content_discovery:discover_via_explore:129 - Discovering content via explore: https://www.tiktok.com/explore
+2025-04-14 12:54:27.529 | INFO     | scraper.content_discovery:_extract_video_elements:266 - Found 48 video links in HTML
+2025-04-14 12:54:27.534 | INFO     | scraper.content_discovery:discover_via_search:76 - Discovered 48 videos via search
+2025-04-14 12:54:27.538 | INFO     | scraper.content_discovery:execute_best_approach:427 - Best approach for 'budget tracker' was search with 48 results
+2025-04-14 12:54:27.543 | INFO     | scraper.tiktok_api:get_videos_for_tag:76 - Processing 48 video elements
+2025-04-14 12:54:27.808 | INFO     | scraper.tiktok_api:get_videos_for_tag:86 - Only found 0 videos, trying additional approaches
+2025-04-14 12:54:27.913 | INFO     | scraper.tiktok_api:get_videos_for_tag:98 - Total videos after additional approaches: 0
+2025-04-14 12:54:47.954 | INFO     | scraper.stealth_browser:close:477 - Stealth browser closed successfully
+2025-04-14 12:54:47.993 | WARNING  | scraper.tiktok_api:get_videos_for_tag:115 - No videos found, falling back to mock data
+2025-04-14 12:54:47.998 | INFO     | scraper.tiktok_api:generate_mock_data:489 - Generating 50 mock videos for keyword: budget tracker
+2025-04-14 12:54:48.014 | INFO     | __main__:scrape_keyword:62 - Processed 15 videos for keyword: budget tracker
+2025-04-14 12:55:02.840 | ERROR    | scraper.content_discovery:discover_via_explore:159 - Error discovering via explore: Page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("input[type=\"search\"], [placeholder*=\"Search\"], [data-e2e=\"search-box\"]")
+  -     - locator resolved to 2 elements. Proceeding with the first one: <form action="/search" data-e2e="search-box" class="search-input css-960d5u-FormElement e14ntknm0">…</form>
+  -     - fill("budgeting")
+  -   - attempting fill action
+  -     2 × waiting for element to be visible, enabled and editable
+  -       - element is not visible
+  -     - retrying fill action
+  -     - waiting 20ms
+  -     2 × waiting for element to be visible, enabled and editable
+  -       - element is not visible
+  -     - retrying fill action
+  -       - waiting 100ms
+  -     55 × waiting for element to be visible, enabled and editable
+  -        - element is not visible
+  -      - retrying fill action
+  -        - waiting 500ms
+
+2025-04-14 12:55:02.848 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying search approach for 'budgeting'
+2025-04-14 12:55:02.852 | INFO     | scraper.content_discovery:discover_via_search:61 - Discovering content via search: https://www.tiktok.com/search?q=budgeting
+2025-04-14 12:55:06.152 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 12:55:55.005 | INFO     | scraper.content_discovery:_extract_video_elements:266 - Found 48 video links in HTML
+2025-04-14 12:55:55.055 | INFO     | scraper.content_discovery:discover_via_search:76 - Discovered 48 videos via search
+2025-04-14 12:55:55.061 | INFO     | scraper.content_discovery:execute_best_approach:427 - Best approach for 'budgeting' was search with 48 results
+2025-04-14 12:55:55.066 | INFO     | scraper.tiktok_api:get_videos_for_tag:76 - Processing 48 video elements
+2025-04-14 12:55:55.281 | INFO     | scraper.tiktok_api:get_videos_for_tag:86 - Only found 0 videos, trying additional approaches
+2025-04-14 12:55:55.377 | INFO     | scraper.tiktok_api:get_videos_for_tag:98 - Total videos after additional approaches: 0
+2025-04-14 12:56:06.464 | INFO     | scraper.stealth_browser:close:477 - Stealth browser closed successfully
+2025-04-14 12:56:06.468 | WARNING  | scraper.tiktok_api:get_videos_for_tag:115 - No videos found, falling back to mock data
+2025-04-14 12:56:06.470 | INFO     | scraper.tiktok_api:generate_mock_data:489 - Generating 50 mock videos for keyword: budgeting
+2025-04-14 12:56:06.472 | INFO     | __main__:scrape_keyword:62 - Processed 15 videos for keyword: budgeting
+2025-04-14 12:56:06.475 | INFO     | __main__:main:112 - Adding delay of 14.57s between batches
+2025-04-14 12:56:21.050 | INFO     | __main__:main:105 - Processing batch 2/13: budgeting tips, budgeting hacks
+2025-04-14 12:56:21.053 | INFO     | __main__:scrape_keyword:44 - Starting scrape for keyword: budgeting tips
+2025-04-14 12:56:21.054 | INFO     | __main__:scrape_keyword:49 - Adding random delay of 4.17s before processing 'budgeting tips'
+2025-04-14 12:56:21.055 | INFO     | __main__:scrape_keyword:44 - Starting scrape for keyword: budgeting hacks
+2025-04-14 12:56:21.057 | INFO     | __main__:scrape_keyword:49 - Adding random delay of 2.18s before processing 'budgeting hacks'
+2025-04-14 12:56:23.253 | INFO     | scraper.tiktok_api:get_videos_for_tag:42 - Fetching videos for keyword: budgeting hacks
+2025-04-14 12:56:23.257 | INFO     | scraper.stealth_browser:launch:134 - Launching stealth browser
+2025-04-14 12:56:25.224 | INFO     | scraper.tiktok_api:get_videos_for_tag:42 - Fetching videos for keyword: budgeting tips
+2025-04-14 12:56:25.227 | INFO     | scraper.stealth_browser:launch:134 - Launching stealth browser
+2025-04-14 12:56:36.963 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying hashtag approach for 'budgeting hacks'
+2025-04-14 12:56:36.987 | INFO     | scraper.content_discovery:discover_via_hashtag:96 - Discovering content via hashtag: https://www.tiktok.com/tag/budgetinghacks
+2025-04-14 12:56:39.538 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying hashtag approach for 'budgeting tips'
+2025-04-14 12:56:39.575 | INFO     | scraper.content_discovery:discover_via_hashtag:96 - Discovering content via hashtag: https://www.tiktok.com/tag/budgetingtips
+2025-04-14 12:56:40.285 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 12:56:52.080 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 13:04:03.300 | WARNING  | scraper.content_discovery:_extract_video_elements:269 - No video elements found on the page
+2025-04-14 13:04:03.424 | INFO     | scraper.content_discovery:discover_via_hashtag:111 - Discovered 0 videos via hashtag
+2025-04-14 13:04:03.431 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying search approach for 'budgeting hacks'
+2025-04-14 13:04:03.455 | INFO     | scraper.content_discovery:discover_via_search:61 - Discovering content via search: https://www.tiktok.com/search?q=budgeting%20hacks
+2025-04-14 13:04:11.358 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 13:08:05.582 | WARNING  | scraper.content_discovery:_extract_video_elements:269 - No video elements found on the page
+2025-04-14 13:08:05.666 | INFO     | scraper.content_discovery:discover_via_hashtag:111 - Discovered 0 videos via hashtag
+2025-04-14 13:08:05.678 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying user_profile approach for 'budgeting tips'
+2025-04-14 13:08:05.688 | INFO     | scraper.content_discovery:discover_via_user_profile:174 - Searching for users: https://www.tiktok.com/search/user?q=budgeting%20tips
+2025-04-14 13:08:11.434 | WARNING  | scraper.content_discovery:discover_via_user_profile:183 - No users found
+2025-04-14 13:08:11.444 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying search approach for 'budgeting tips'
+2025-04-14 13:08:11.449 | INFO     | scraper.content_discovery:discover_via_search:61 - Discovering content via search: https://www.tiktok.com/search?q=budgeting%20tips
+2025-04-14 13:08:13.539 | INFO     | scraper.content_discovery:_extract_video_elements:266 - Found 42 video links in HTML
+2025-04-14 13:08:13.543 | INFO     | scraper.content_discovery:discover_via_search:76 - Discovered 42 videos via search
+2025-04-14 13:08:13.550 | INFO     | scraper.content_discovery:execute_best_approach:427 - Best approach for 'budgeting hacks' was search with 42 results
+2025-04-14 13:08:13.557 | INFO     | scraper.tiktok_api:get_videos_for_tag:76 - Processing 42 video elements
+2025-04-14 13:08:13.565 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 13:08:14.174 | INFO     | scraper.tiktok_api:get_videos_for_tag:86 - Only found 0 videos, trying additional approaches
+2025-04-14 13:08:14.428 | INFO     | scraper.tiktok_api:get_videos_for_tag:98 - Total videos after additional approaches: 0
+2025-04-14 13:11:53.466 | INFO     | scraper.stealth_browser:close:477 - Stealth browser closed successfully
+2025-04-14 13:11:53.535 | WARNING  | scraper.tiktok_api:get_videos_for_tag:115 - No videos found, falling back to mock data
+2025-04-14 13:11:53.540 | INFO     | scraper.tiktok_api:generate_mock_data:489 - Generating 50 mock videos for keyword: budgeting hacks
+2025-04-14 13:11:53.552 | INFO     | __main__:scrape_keyword:62 - Processed 15 videos for keyword: budgeting hacks
+2025-04-14 13:18:19.275 | INFO     | __main__:main:95 - Starting TikTok Niche Scraper with enhanced stealth techniques
+2025-04-14 13:18:19.277 | INFO     | __main__:main:96 - Browser visibility: Visible
+2025-04-14 13:18:19.278 | INFO     | __main__:main:108 - Processing keywords in batches of 2
+2025-04-14 13:18:19.279 | INFO     | __main__:main:115 - Processing batch 1/13: budgeting, budget tracker
+2025-04-14 13:18:19.280 | INFO     | __main__:scrape_keyword:46 - Starting scrape for keyword: budgeting
+2025-04-14 13:18:19.281 | INFO     | __main__:scrape_keyword:51 - Adding random delay of 2.20s before processing 'budgeting'
+2025-04-14 13:18:19.284 | INFO     | __main__:scrape_keyword:46 - Starting scrape for keyword: budget tracker
+2025-04-14 13:18:19.286 | INFO     | scraper.tiktok_api:get_videos_for_tag:42 - Fetching videos for keyword: budget tracker
+2025-04-14 13:18:19.286 | INFO     | scraper.stealth_browser:launch:139 - Launching stealth browser (headless: False)
+2025-04-14 13:18:21.484 | INFO     | scraper.tiktok_api:get_videos_for_tag:42 - Fetching videos for keyword: budgeting
+2025-04-14 13:18:21.488 | INFO     | scraper.stealth_browser:launch:139 - Launching stealth browser (headless: False)
+2025-04-14 13:18:23.296 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying explore approach for 'budget tracker'
+2025-04-14 13:18:23.307 | INFO     | scraper.content_discovery:discover_via_explore:129 - Discovering content via explore: https://www.tiktok.com/explore
+2025-04-14 13:18:31.425 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying hashtag approach for 'budgeting'
+2025-04-14 13:18:31.432 | INFO     | scraper.content_discovery:discover_via_hashtag:96 - Discovering content via hashtag: https://www.tiktok.com/tag/budgeting
+2025-04-14 13:18:33.628 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 13:19:37.122 | ERROR    | scraper.content_discovery:discover_via_explore:159 - Error discovering via explore: Page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("input[type=\"search\"], [placeholder*=\"Search\"], [data-e2e=\"search-box\"]")
+  -     - locator resolved to 2 elements. Proceeding with the first one: <form action="/search" data-e2e="search-box" class="search-input css-960d5u-FormElement e14ntknm0">…</form>
+  -     - fill("budget tracker")
+  -   - attempting fill action
+  -     2 × waiting for element to be visible, enabled and editable
+  -       - element is not visible
+  -     - retrying fill action
+  -     - waiting 20ms
+  -     2 × waiting for element to be visible, enabled and editable
+  -       - element is not visible
+  -     - retrying fill action
+  -       - waiting 100ms
+  -     45 × waiting for element to be visible, enabled and editable
+  -        - element is not visible
+  -      - retrying fill action
+  -        - waiting 500ms
+
+2025-04-14 13:19:37.215 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying user_profile approach for 'budget tracker'
+2025-04-14 13:19:37.221 | INFO     | scraper.content_discovery:discover_via_user_profile:174 - Searching for users: https://www.tiktok.com/search/user?q=budget%20tracker
+2025-04-14 13:20:01.374 | WARNING  | scraper.content_discovery:discover_via_user_profile:183 - No users found
+2025-04-14 13:20:01.383 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying hashtag approach for 'budget tracker'
+2025-04-14 13:20:01.388 | INFO     | scraper.content_discovery:discover_via_hashtag:96 - Discovering content via hashtag: https://www.tiktok.com/tag/budgettracker
+2025-04-14 13:20:13.378 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 13:21:47.781 | WARNING  | scraper.content_discovery:_extract_video_elements:269 - No video elements found on the page
+2025-04-14 13:21:47.849 | INFO     | scraper.content_discovery:discover_via_hashtag:111 - Discovered 0 videos via hashtag
+2025-04-14 13:21:47.860 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying explore approach for 'budgeting'
+2025-04-14 13:21:47.865 | INFO     | scraper.content_discovery:discover_via_explore:129 - Discovering content via explore: https://www.tiktok.com/explore
+2025-04-14 13:23:25.467 | ERROR    | scraper.content_discovery:discover_via_explore:159 - Error discovering via explore: Page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("input[type=\"search\"], [placeholder*=\"Search\"], [data-e2e=\"search-box\"]")
+
+2025-04-14 13:23:25.515 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying search approach for 'budgeting'
+2025-04-14 13:23:25.524 | INFO     | scraper.content_discovery:discover_via_search:61 - Discovering content via search: https://www.tiktok.com/search?q=budgeting
+2025-04-14 13:23:44.817 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 13:24:15.018 | WARNING  | scraper.content_discovery:_extract_video_elements:269 - No video elements found on the page
+2025-04-14 13:24:15.026 | INFO     | scraper.content_discovery:discover_via_hashtag:111 - Discovered 0 videos via hashtag
+2025-04-14 13:24:15.030 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying search approach for 'budget tracker'
+2025-04-14 13:24:15.035 | INFO     | scraper.content_discovery:discover_via_search:61 - Discovering content via search: https://www.tiktok.com/search?q=budget%20tracker
+2025-04-14 13:24:28.123 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 13:27:03.040 | ERROR    | scraper.content_discovery:_save_debug_info:385 - Error saving debug info: Page.screenshot: Timeout 30000ms exceeded.
+Call log:
+  - taking page screenshot
+  -   - waiting for fonts to load...
+  -   - fonts loaded
+
+2025-04-14 13:27:03.995 | INFO     | scraper.content_discovery:_extract_video_elements:266 - Found 54 video links in HTML
+2025-04-14 13:27:04.005 | INFO     | scraper.content_discovery:discover_via_search:76 - Discovered 54 videos via search
+2025-04-14 13:27:04.012 | INFO     | scraper.content_discovery:execute_best_approach:427 - Best approach for 'budget tracker' was search with 54 results
+2025-04-14 13:27:04.021 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Processing 54 video elements
+2025-04-14 13:27:04.658 | INFO     | scraper.tiktok_api:get_videos_for_tag:83 - Only found 0 videos, trying additional approaches
+2025-04-14 13:27:04.986 | INFO     | scraper.tiktok_api:get_videos_for_tag:95 - Total videos after additional approaches: 0
+2025-04-14 13:28:48.186 | INFO     | scraper.content_discovery:_extract_video_elements:266 - Found 36 video links in HTML
+2025-04-14 13:28:48.236 | INFO     | scraper.content_discovery:discover_via_search:76 - Discovered 36 videos via search
+2025-04-14 13:28:48.239 | INFO     | scraper.content_discovery:execute_best_approach:427 - Best approach for 'budgeting' was search with 36 results
+2025-04-14 13:28:48.241 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Processing 36 video elements
+2025-04-14 13:28:48.393 | INFO     | scraper.tiktok_api:get_videos_for_tag:83 - Only found 0 videos, trying additional approaches
+2025-04-14 13:28:48.461 | INFO     | scraper.tiktok_api:get_videos_for_tag:95 - Total videos after additional approaches: 0
+2025-04-14 13:28:55.878 | INFO     | scraper.stealth_browser:close:506 - Stealth browser closed successfully
+2025-04-14 13:28:55.883 | INFO     | scraper.tiktok_api:get_videos_for_tag:111 - Successfully fetched 0 videos for keyword: budgeting
+2025-04-14 13:28:55.886 | WARNING  | __main__:scrape_keyword:59 - Not enough videos found for keyword 'budgeting'. Found 0, minimum required: 1
+2025-04-14 13:29:18.799 | INFO     | scraper.stealth_browser:close:506 - Stealth browser closed successfully
+2025-04-14 13:29:18.801 | INFO     | scraper.tiktok_api:get_videos_for_tag:111 - Successfully fetched 0 videos for keyword: budget tracker
+2025-04-14 13:29:18.802 | WARNING  | __main__:scrape_keyword:59 - Not enough videos found for keyword 'budget tracker'. Found 0, minimum required: 1
+2025-04-14 13:29:18.804 | INFO     | __main__:main:132 - Adding delay of 10.60s between batches
+2025-04-14 13:29:29.410 | INFO     | __main__:main:115 - Processing batch 2/13: budgeting tips, budgeting hacks
+2025-04-14 13:29:29.414 | INFO     | __main__:scrape_keyword:46 - Starting scrape for keyword: budgeting tips
+2025-04-14 13:29:29.417 | INFO     | __main__:scrape_keyword:51 - Adding random delay of 3.50s before processing 'budgeting tips'
+2025-04-14 13:29:29.419 | INFO     | __main__:scrape_keyword:46 - Starting scrape for keyword: budgeting hacks
+2025-04-14 13:29:29.420 | INFO     | __main__:scrape_keyword:51 - Adding random delay of 4.12s before processing 'budgeting hacks'
+2025-04-14 13:29:32.929 | INFO     | scraper.tiktok_api:get_videos_for_tag:42 - Fetching videos for keyword: budgeting tips
+2025-04-14 13:29:32.938 | INFO     | scraper.stealth_browser:launch:139 - Launching stealth browser (headless: False)
+2025-04-14 13:29:33.546 | INFO     | scraper.tiktok_api:get_videos_for_tag:42 - Fetching videos for keyword: budgeting hacks
+2025-04-14 13:29:33.549 | INFO     | scraper.stealth_browser:launch:139 - Launching stealth browser (headless: False)
+2025-04-14 13:29:37.188 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying explore approach for 'budgeting hacks'
+2025-04-14 13:29:37.274 | INFO     | scraper.content_discovery:discover_via_explore:129 - Discovering content via explore: https://www.tiktok.com/explore
+2025-04-14 13:30:42.416 | ERROR    | scraper.content_discovery:discover_via_explore:159 - Error discovering via explore: Page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("input[type=\"search\"], [placeholder*=\"Search\"], [data-e2e=\"search-box\"]")
+  -     - locator resolved to 2 elements. Proceeding with the first one: <form action="/search" data-e2e="search-box" class="search-input css-1p4fzjp-FormElement e14ntknm0">…</form>
+  -     - fill("budgeting hacks")
+  -   - attempting fill action
+  -     2 × waiting for element to be visible, enabled and editable
+  -       - element is not visible
+  -     - retrying fill action
+  -     - waiting 20ms
+  -     2 × waiting for element to be visible, enabled and editable
+  -       - element is not visible
+  -     - retrying fill action
+  -       - waiting 100ms
+  -     54 × waiting for element to be visible, enabled and editable
+  -        - element is not visible
+  -      - retrying fill action
+  -        - waiting 500ms
+
+2025-04-14 13:30:45.592 | INFO     | scraper.content_discovery:execute_best_approach:413 - Trying hashtag approach for 'budgeting hacks'
+2025-04-14 13:30:45.643 | INFO     | scraper.content_discovery:discover_via_hashtag:96 - Discovering content via hashtag: https://www.tiktok.com/tag/budgetinghacks
+2025-04-14 13:30:47.956 | INFO     | scraper.content_discovery:_scroll_for_content:279 - Scrolling page 12 times to load more content
+2025-04-14 13:32:36.027 | INFO     | scraper.content_discovery:_extract_video_elements:254 - Found 130 videos with selector: [data-e2e="challenge-item"]
+2025-04-14 13:32:36.261 | INFO     | scraper.content_discovery:discover_via_hashtag:111 - Discovered 130 videos via hashtag
+2025-04-14 13:32:36.278 | INFO     | scraper.content_discovery:execute_best_approach:427 - Best approach for 'budgeting hacks' was hashtag with 130 results
+2025-04-14 13:32:36.283 | INFO     | scraper.tiktok_api:get_videos_for_tag:73 - Processing 130 video elements
+2025-04-14 13:33:33.328 | INFO     | scraper.stealth_browser:close:506 - Stealth browser closed successfully
+2025-04-14 13:33:33.368 | INFO     | scraper.tiktok_api:get_videos_for_tag:111 - Successfully fetched 50 videos for keyword: budgeting hacks
+2025-04-14 13:33:33.370 | INFO     | __main__:scrape_keyword:69 - Processed 50 videos for keyword: budgeting hacks
+2025-04-14 13:36:31.953 | INFO     | scraper.stealth_browser:close:477 - Stealth browser closed successfully
+2025-04-14 13:36:32.033 | INFO     | __main__:<module>:174 - Keyboard interrupt received, shutting down...
+2025-04-14 13:47:12.348 | ERROR    | scraper.stealth_browser:close:508 - Error closing stealth browser: Browser.close: Connection closed while reading from the driver
+2025-04-14 13:47:12.494 | INFO     | __main__:<module>:209 - Keyboard interrupt received, shutting down...
+2025-04-14 13:51:55.072 | INFO     | utils.scheduler:setup_schedule:114 - Setting up schedule
+2025-04-14 13:51:55.075 | INFO     | utils.scheduler:setup_schedule:127 - Scheduling scraper to run weekly on specified days at 03:00
+2025-04-14 13:51:55.076 | INFO     | utils.scheduler:setup_schedule:171 - Schedule setup complete
+2025-04-14 13:51:55.076 | INFO     | utils.scheduler:setup_schedule:176 - Next scheduled run: 2025-04-16 03:00:00

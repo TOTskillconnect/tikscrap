@@ -1,0 +1,11 @@
+httpx==0.24.1
+beautifulsoup4==4.12.2
+loguru==0.7.0
+parsel==1.8.1
+asyncio==3.4.3
+google-api-python-client==2.97.0
+google-auth-httplib2==0.1.0
+google-auth-oauthlib==1.0.0
+playwright==1.40.0
+schedule==1.2.2
+python-daemon==3.0.1 
