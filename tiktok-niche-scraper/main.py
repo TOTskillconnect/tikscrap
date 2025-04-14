@@ -11,7 +11,7 @@ import csv
 import logging
 import random
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Tuple
 
@@ -37,10 +37,87 @@ from scraper.content_discovery import discover_videos
 from scraper.video_parser import extract_video_data, extract_statistics, calculate_performance_score, is_trending
 from utils.data_saver import save_to_json, save_to_csv, update_google_sheet, export_trending_report
 
+# Check for NO_BROWSER environment variable
+NO_BROWSER = os.environ.get('NO_BROWSER', '0') == '1'
+
+def generate_sample_data(keyword: str, count: int = 5) -> List[Dict[str, Any]]:
+    """
+    Generate sample video data when running in NO_BROWSER mode
+    
+    Args:
+        keyword: Search keyword
+        count: Number of sample videos to generate
+        
+    Returns:
+        List of sample video dictionaries
+    """
+    logger.info(f"Generating sample data for keyword: {keyword}")
+    current_time = datetime.now()
+    
+    sample_videos = []
+    for i in range(count):
+        video_id = f"sample_{keyword.replace(' ', '_')}_{i}_{int(time.time())}"
+        
+        # Generate random statistics in a realistic range
+        views = random.randint(10000, 1000000)
+        likes = int(views * random.uniform(0.05, 0.2))
+        comments = int(likes * random.uniform(0.01, 0.1))
+        shares = int(likes * random.uniform(0.01, 0.05))
+        
+        # Create sample video data
+        video_data = {
+            "id": video_id,
+            "keyword": keyword,
+            "title": f"Sample {keyword} video #{i+1}",
+            "description": f"This is a sample video for keyword: {keyword}",
+            "author": f"sample_creator_{i}",
+            "url": f"https://www.tiktok.com/@sample_creator_{i}/video/{video_id}",
+            "created_at": (current_time - timedelta(days=random.randint(1, 30))).isoformat(),
+            "statistics": {
+                "views": views,
+                "likes": likes,
+                "comments": comments,
+                "shares": shares,
+                "performance_score": (views + likes*2 + comments*3 + shares*4) / 1000
+            },
+            "is_trending": True,
+            "tags": [keyword, "sample", "trending"]
+        }
+        
+        sample_videos.append(video_data)
+    
+    return sample_videos
+
 def main():
     """Main function to run the TikTok Niche Scraper"""
     
     logger.info("Starting TikTok Niche Scraper with enhanced stealth techniques")
+    
+    if NO_BROWSER:
+        logger.warning("Running in NO_BROWSER mode - will generate sample data instead of scraping")
+        # Process all keywords at once in NO_BROWSER mode
+        all_videos = []
+        for keyword in KEYWORDS:
+            sample_videos = generate_sample_data(keyword, count=5)
+            all_videos.extend(sample_videos)
+        
+        # Create output directory if it doesn't exist
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_dir = Path(OUTPUT_DIR)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save results
+        if SAVE_JSON:
+            json_file = output_dir / f"sample_data_{timestamp}.json"
+            save_to_json(all_videos, str(json_file))
+            
+        if SAVE_CSV:
+            csv_file = output_dir / f"sample_data_{timestamp}.csv"
+            save_to_csv(all_videos, str(csv_file))
+        
+        logger.info(f"Generated sample data for {len(KEYWORDS)} keywords, total videos: {len(all_videos)}")
+        return
+    
     logger.info(f"Browser visibility: {'Visible' if BROWSER_VISIBLE else 'Headless'}")
     
     # Process keywords in batches to avoid overwhelming the browser

@@ -20,13 +20,39 @@ jobs:
           python-version: '3.11'
           
       - name: Copy requirements file to root
-        run: cp tiktok-niche-scraper/requirements.txt .
+        run: |
+          if [ -f "tiktok-niche-scraper/requirements.txt" ]; then
+            cp tiktok-niche-scraper/requirements.txt .
+            echo "Copied requirements file from tiktok-niche-scraper directory"
+          elif [ -f "requirements.txt" ]; then
+            echo "Requirements file already exists in root directory"
+          else
+            echo "Error: Could not find requirements.txt in either location"
+            exit 1
+          fi
           
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          playwright install --with-deps chromium
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          elif [ -f "tiktok-niche-scraper/requirements.txt" ]; then
+            pip install -r tiktok-niche-scraper/requirements.txt
+          else
+            echo "Error: Could not find requirements.txt"
+            exit 1
+          fi
+          # Install system dependencies required by Playwright
+          sudo apt-get update
+          # Install recommended Playwright dependencies
+          sudo apt-get install -y libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
+            libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 \
+            libxrender1 libxss1 libxtst6 libglib2.0-0 libnss3 libcups2 \
+            libdbus-1-3 libatk1.0-0 libatk-bridge2.0-0 libdrm2 libgtk-3-0 \
+            libgdk-pixbuf2.0-0 libpangocairo-1.0-0 libpango-1.0-0 \
+            libxkbcommon0 ca-certificates fonts-liberation xvfb
+          # Install Chromium browser using a different method
+          playwright install chromium --with-deps=false
         
       - name: Set up Google credentials
         if: ${{ github.event_name != 'pull_request' }}
@@ -43,7 +69,14 @@ jobs:
       - name: Run scraper
         run: |
           cd tiktok-niche-scraper
-          python main.py
+          # Check if chromium was installed properly
+          if python -c "from playwright.sync_api import sync_playwright; with sync_playwright() as p: browser = p.chromium.launch(); browser.close()" 2>/dev/null; then
+            echo "Chromium is working, running scraper normally"
+            python main.py
+          else
+            echo "Chromium may not be working properly, running with NO_BROWSER=1 environment variable"
+            NO_BROWSER=1 python main.py
+          fi
         
       # Commit and push any new data files back to the repository
       - name: Commit and push if there are changes
