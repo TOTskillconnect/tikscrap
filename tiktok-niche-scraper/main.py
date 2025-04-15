@@ -19,6 +19,10 @@ from typing import List, Dict, Any, Optional, Tuple
 from utils.logger import get_logger
 logger = get_logger()
 
+# Check for NO_BROWSER environment variable first
+NO_BROWSER = os.environ.get('NO_BROWSER', '0').lower() in ('1', 'true', 'yes', 'y')
+logger.info(f"NO_BROWSER mode: {'enabled' if NO_BROWSER else 'disabled'}")
+
 # Import configuration
 try:
     from config import (
@@ -29,16 +33,41 @@ try:
     )
 except ImportError as e:
     logger.error(f"Failed to import configuration: {e}")
-    sys.exit(1)
+    logger.warning("Setting fallback configuration values")
+    # Fallback configuration for GitHub Actions
+    KEYWORDS = ["sample", "fallback", "keyword"]
+    MAX_VIDEOS_PER_KEYWORD = 5
+    BROWSER_VISIBLE = False
+    STEALTH_LEVEL = 1
+    OUTPUT_DIR = "data"
+    SAVE_JSON = True
+    SAVE_CSV = True
+    UPDATE_GOOGLE_SHEETS = False
+    TRENDING_ONLY = True
+    MIN_VIEWS = 1000
+    MIN_ENGAGEMENT_RATE = 0.01
+    SORT_BY_PERFORMANCE = True
+    MAX_TOTAL_VIDEOS = 50
 
-# Import scraper modules
-from scraper.stealth_browser import StealthBrowser
-from scraper.content_discovery import discover_videos
-from scraper.video_parser import extract_video_data, extract_statistics, calculate_performance_score, is_trending
+# Import scraper modules conditionally
+if not NO_BROWSER:
+    try:
+        from scraper.stealth_browser import StealthBrowser
+        from scraper.content_discovery import discover_videos
+        from scraper.video_parser import extract_video_data, extract_statistics, calculate_performance_score, is_trending
+        BROWSER_IMPORTS_SUCCESS = True
+        logger.info("Successfully imported browser-related modules")
+    except ImportError as e:
+        logger.warning(f"Failed to import browser modules: {e}")
+        logger.warning("Forcing NO_BROWSER mode due to import failures")
+        NO_BROWSER = True
+        BROWSER_IMPORTS_SUCCESS = False
+else:
+    logger.info("Skipping browser-related imports due to NO_BROWSER mode")
+    BROWSER_IMPORTS_SUCCESS = False
+
+# Always import data saving utilities
 from utils.data_saver import save_to_json, save_to_csv, update_google_sheet, export_trending_report
-
-# Check for NO_BROWSER environment variable
-NO_BROWSER = os.environ.get('NO_BROWSER', '0').lower() in ('1', 'true', 'yes', 'y')
 
 def generate_sample_data(keyword: str, count: int = 5) -> List[Dict[str, Any]]:
     """
@@ -93,82 +122,79 @@ def main():
     
     logger.info("Starting TikTok Niche Scraper with enhanced stealth techniques")
     
-    # Check for NO_BROWSER mode - also check if playwright is available
-    use_no_browser = NO_BROWSER
-    if not use_no_browser:
-        try:
-            # Check if playwright is properly installed
-            import playwright
-            from playwright.sync_api import sync_playwright
-            logger.info("Playwright is available")
-        except (ImportError, Exception) as e:
-            logger.warning(f"Playwright is not properly installed or configured: {str(e)}")
-            logger.warning("Falling back to NO_BROWSER mode")
-            use_no_browser = True
-    
-    if use_no_browser:
+    # NO_BROWSER mode check - already done at module level
+    # Simply check the final value of NO_BROWSER
+    if NO_BROWSER:
         logger.warning("Running in NO_BROWSER mode - will generate sample data instead of scraping")
-        # Create output directories in advance for CI/CD environments
-        try:
-            # Ensure output directory exists
-            output_dir = Path(OUTPUT_DIR)
-            output_dir.mkdir(parents=True, exist_ok=True)
-            logger.info(f"Created output directory: {OUTPUT_DIR}")
-        except Exception as e:
-            logger.error(f"Failed to create output directory: {str(e)}")
-            # Use a fallback directory if the configured one fails
-            output_dir = Path("data")
-            output_dir.mkdir(parents=True, exist_ok=True)
-            logger.info(f"Using fallback output directory: data")
-        
-        # Process all keywords at once in NO_BROWSER mode
-        all_videos = []
-        successful_keywords = []
-        failed_keywords = []
-        
-        try:
-            # Generate sample data for each keyword
-            for keyword in KEYWORDS:
-                try:
-                    sample_videos = generate_sample_data(keyword, count=5)
-                    all_videos.extend(sample_videos)
-                    successful_keywords.append(keyword)
-                except Exception as e:
-                    logger.error(f"Error generating sample data for keyword {keyword}: {str(e)}")
-                    failed_keywords.append(keyword)
-            
-            # Create timestamp
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            
-            # Save results
-            if SAVE_JSON:
-                try:
-                    json_file = output_dir / f"sample_data_{timestamp}.json"
-                    save_to_json(all_videos, str(json_file))
-                    logger.info(f"Saved sample data to JSON: {json_file}")
-                except Exception as e:
-                    logger.error(f"Failed to save JSON data: {str(e)}")
-                
-            if SAVE_CSV:
-                try:
-                    csv_file = output_dir / f"sample_data_{timestamp}.csv"
-                    save_to_csv(all_videos, str(csv_file))
-                    logger.info(f"Saved sample data to CSV: {csv_file}")
-                except Exception as e:
-                    logger.error(f"Failed to save CSV data: {str(e)}")
-            
-            logger.info(f"Generated sample data for {len(successful_keywords)} keywords, total videos: {len(all_videos)}")
-            logger.info(f"Successful keywords: {', '.join(successful_keywords)}")
-            if failed_keywords:
-                logger.warning(f"Failed keywords: {', '.join(failed_keywords)}")
-                
-        except Exception as e:
-            logger.error(f"Unexpected error in NO_BROWSER mode: {str(e)}")
-            
+        run_no_browser_mode()
         return
     
     logger.info(f"Browser visibility: {'Visible' if BROWSER_VISIBLE else 'Headless'}")
     
+    # Run normal browser mode
+    run_browser_mode()
+
+def run_no_browser_mode():
+    """Run the scraper in NO_BROWSER mode, generating sample data"""
+    # Create output directories in advance for CI/CD environments
+    try:
+        # Ensure output directory exists
+        output_dir = Path(OUTPUT_DIR)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Created output directory: {OUTPUT_DIR}")
+    except Exception as e:
+        logger.error(f"Failed to create output directory: {str(e)}")
+        # Use a fallback directory if the configured one fails
+        output_dir = Path("data")
+        output_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Using fallback output directory: data")
+    
+    # Process all keywords at once in NO_BROWSER mode
+    all_videos = []
+    successful_keywords = []
+    failed_keywords = []
+    
+    try:
+        # Generate sample data for each keyword
+        for keyword in KEYWORDS:
+            try:
+                sample_videos = generate_sample_data(keyword, count=5)
+                all_videos.extend(sample_videos)
+                successful_keywords.append(keyword)
+            except Exception as e:
+                logger.error(f"Error generating sample data for keyword {keyword}: {str(e)}")
+                failed_keywords.append(keyword)
+        
+        # Create timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Save results
+        if SAVE_JSON:
+            try:
+                json_file = output_dir / f"sample_data_{timestamp}.json"
+                save_to_json(all_videos, str(json_file))
+                logger.info(f"Saved sample data to JSON: {json_file}")
+            except Exception as e:
+                logger.error(f"Failed to save JSON data: {str(e)}")
+            
+        if SAVE_CSV:
+            try:
+                csv_file = output_dir / f"sample_data_{timestamp}.csv"
+                save_to_csv(all_videos, str(csv_file))
+                logger.info(f"Saved sample data to CSV: {csv_file}")
+            except Exception as e:
+                logger.error(f"Failed to save CSV data: {str(e)}")
+        
+        logger.info(f"Generated sample data for {len(successful_keywords)} keywords, total videos: {len(all_videos)}")
+        logger.info(f"Successful keywords: {', '.join(successful_keywords)}")
+        if failed_keywords:
+            logger.warning(f"Failed keywords: {', '.join(failed_keywords)}")
+            
+    except Exception as e:
+        logger.error(f"Unexpected error in NO_BROWSER mode: {str(e)}")
+
+def run_browser_mode():
+    """Run the scraper in normal browser mode with web scraping"""
     # Process keywords in batches to avoid overwhelming the browser
     batch_size = 2
     keyword_batches = [KEYWORDS[i:i+batch_size] for i in range(0, len(KEYWORDS), batch_size)]

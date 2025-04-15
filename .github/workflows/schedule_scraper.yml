@@ -34,37 +34,26 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          
+          # Modify requirements installation to exclude playwright
           if [ -f "requirements.txt" ]; then
-            pip install -r requirements.txt
+            # Install all requirements EXCEPT playwright
+            grep -v "playwright" requirements.txt > requirements_no_browser.txt
+            pip install -r requirements_no_browser.txt
           elif [ -f "tiktok-niche-scraper/requirements.txt" ]; then
-            pip install -r tiktok-niche-scraper/requirements.txt
+            # Install all requirements EXCEPT playwright
+            grep -v "playwright" tiktok-niche-scraper/requirements.txt > requirements_no_browser.txt
+            pip install -r requirements_no_browser.txt
           else
             echo "Error: Could not find requirements.txt"
             exit 1
           fi
           
-          # Skip browser installation completely for GitHub Actions
-          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+          # Install only minimal packages needed without browser
+          pip install requests beautifulsoup4 pandas
           
-          # Create directories Playwright would look for
-          mkdir -p $HOME/.cache/ms-playwright
-          
-          # Install minimal system dependencies that are known to be available
-          echo "Installing only essential system dependencies"
-          sudo apt-get update
-          sudo apt-get install -y \
-            fonts-liberation \
-            libnss3 \
-            libatk1.0-0 \
-            libatk-bridge2.0-0 \
-            libcups2 \
-            libdrm2 \
-            libxkbcommon0 \
-            xvfb
-            
-          # Force NO_BROWSER mode for the script
+          # Force NO_BROWSER environment variable for the entire workflow
           echo "NO_BROWSER=1" >> $GITHUB_ENV
-          echo "Using NO_BROWSER mode to avoid browser dependency issues"
         
       - name: Set up Google credentials
         if: ${{ github.event_name != 'pull_request' }}
@@ -81,12 +70,14 @@ jobs:
       - name: Ensure data directory exists
         run: |
           mkdir -p tiktok-niche-scraper/data
+          chmod -R 777 tiktok-niche-scraper/data
+          echo "Created data directory with full permissions"
           
       - name: Run scraper
         run: |
           cd tiktok-niche-scraper
-          # We're using NO_BROWSER from environment variables already set earlier
-          echo "Running scraper with NO_BROWSER=$NO_BROWSER"
+          # We're using NO_BROWSER environment variable set earlier
+          echo "Running scraper with NO_BROWSER=1"
           python main.py
         
       # Commit and push any new data files back to the repository
